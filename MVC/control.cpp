@@ -171,6 +171,15 @@ void keyboard_func (unsigned char key, int x, int y)
 	}
 }
 
+void mouse_click_src (int button, int state, int x, int y)
+{
+	Point vertex(x,y);
+}
+
+void mouse_click_dst (int button, int state, int x, int y)
+{
+	cerr << x << y << endl;
+}
 
 void menu_help ()
 {
@@ -180,6 +189,8 @@ void menu_help ()
 void image_loadSrc (const char* filename)
 {
 	image_load(filename, originalSrcImage, currentSrcImage, false);
+	srcPatch.img_width = originalSrcImage->getWidth();
+	srcPatch.img_height = originalSrcImage->getHeight();
 }
 
 void image_loadDst (const char* filename)

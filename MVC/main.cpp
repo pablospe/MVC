@@ -16,6 +16,8 @@ Image* currentDstImage = NULL;
 Image* originalDstImage = NULL;
 Image* originalSrcImage = NULL;
 
+Patch srcPatch;
+
 int windowSrc;
 int windowDst;
 
@@ -25,42 +27,31 @@ int main (int argc, char** argv)
 	// set up the window
 	glutInit(&argc, &argv[0]); 
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
-	glutInitWindowPosition(100,100);
-	glutInitWindowSize(windowSrc_width, windowSrc_height);
 
 	// SOURCE WINDOW
+	glutInitWindowPosition(100,100);
+	glutInitWindowSize(windowSrc_width, windowSrc_height);
 	windowSrc = glutCreateWindow("Source");
-
-	// register call back functions
 	glutDisplayFunc(display);
 	glutReshapeFunc(unreshapeSrc);
-
 	glClearColor(0.0,0.0,0.0,0.0);
 	glDisable(GL_DEPTH_TEST);
-
-	// setup main menu
 	make_menuSrc();
-
-	// register keyboard callback function
 	glutKeyboardFunc(keyboard_func);
+	glutMouseFunc(mouse_click_src);
 	// END SOURCE WINDOW
 
 	// TARGET WINDOW
 	glutInitWindowPosition(500,100);
 	glutInitWindowSize(windowSrc_width, windowSrc_height);
 	windowDst = glutCreateWindow("Target");
-	// register call back functions
 	glutDisplayFunc(display);
 	glutReshapeFunc(unreshapeDst);
-
 	glClearColor(0.0,0.0,0.0,0.0);
 	glDisable(GL_DEPTH_TEST);
-
-	// setup main menu
 	make_menuDst();
-
-	// register keyboard callback function
 	glutKeyboardFunc(keyboard_func);
+	glutMouseFunc(mouse_click_dst);
 	// END TARGET WINDOW
 
 	// wait for something to happen

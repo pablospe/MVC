@@ -22,6 +22,12 @@ static inline unsigned char val2bits (double v, int b)
 	return (unsigned char) (floor(v * maxvals[b] + 0.5) / maxvals[b] * 255);
 }
 
+bool close(Point& pt1, Point& pt2)
+{
+	return (abs(pt1.x - pt2.x) <= 3 &&
+			abs(pt1.y - pt2.y) <= 3);
+}
+
 Pixel::Pixel()
 {
 	col[0]=0;

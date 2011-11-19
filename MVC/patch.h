@@ -8,9 +8,12 @@
 class Patch
 {
 public:
+	Patch();
 	Patch(int width, int height);
 	void addPoint(Point& vertex);
 	void computeInterior();
+
+	void highLight(Image* img);
 
 	vector<Point> interior;
 	vector<Point> boundary;

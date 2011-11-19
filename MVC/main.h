@@ -4,6 +4,7 @@
 
 #include "common.h"
 #include "image.h"
+#include "patch.h"
 
 extern int windowSrc_width;
 extern int windowSrc_height;
@@ -15,6 +16,8 @@ extern Image* originalSrcImage;
 
 extern Image* currentDstImage;
 extern Image* originalDstImage;
+
+extern Patch srcPatch;
 
 int  main (int argc, char** argv);
 void display();

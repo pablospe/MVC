@@ -15,7 +15,12 @@ using namespace std;
 struct Point {
 	int x;
 	int y;
+	Point(int X, int Y): x(X), y(Y)
+	{
+	}
 };
+
+bool close(Point&, Point&);
 
 class Pixel
 {

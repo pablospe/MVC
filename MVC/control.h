@@ -12,9 +12,10 @@ int make_menuDst();
 // glut callbacks
 void menu_func (int value);
 void keyboard_func (unsigned char key, int x, int y);
+void mouse_click_src (int button, int state, int x, int y);
+void mouse_click_dst (int button, int state, int x, int y);
 
-/*** unused
-void mouse_click_func (int button, int state, int x, int y);
+/***
 void mouse_move_func (int x, int y);
 void idle_func ();
 ***/
