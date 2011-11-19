@@ -102,6 +102,7 @@ void menu_func (int value)
 		break;
 
 	case M_SRC_REVERT:
+		srcPatch.clear();
 		image_revertSrc();
 		break;
 
@@ -197,6 +198,7 @@ void mouse_click_src (int button, int state, int x, int y)
 			Point vertex(x,y);
 			if (srcPatch.addPoint(vertex)) {
 				cout << "Patch is closed" << endl;
+				srcPatch.fillBoundary();
 				srcPatch.highLight(currentSrcImage);
 				cloningSrc = false;
 			}

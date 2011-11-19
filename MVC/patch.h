@@ -15,6 +15,7 @@ public:
 	void fillBoundary();
 	void linearize(Point pt1, Point pt2, vector<Point>& border);
 	void highLight(Image* img) const;
+	void clear();
 
 	vector<Point> interior;
 	vector<Point> boundary;
