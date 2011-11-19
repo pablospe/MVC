@@ -6,6 +6,7 @@ Patch::Patch()
 	lowX(0), lowY(0), highX(0), highY(0)
 {
 	boundary.clear();
+	interior.clear();
 }
 
 Patch::Patch(int width, int height)
@@ -13,21 +14,23 @@ Patch::Patch(int width, int height)
 	lowX(0), lowY(0), highX(0), highY(0)
 {
 	boundary.clear();
+	interior.clear();
 }
 
 bool Patch::addPoint(Point& vertex)
 {
-	if ((boundary.size() > 3) && (close(vertex,boundary[0])))
-		return true;
-	else {
+	if (boundary.size() > 3) {
+		if (close(vertex,boundary[0]))
+			return true;
+
 		cerr << "Adding vertex at: " << vertex.x << " " << vertex.y << endl;
 		boundary.push_back(vertex);
-
+		
 		if (boundary.size() == 1) {
 			lowX = vertex.x;
 			lowY = vertex.y;
 		}
-		
+
 		else  {
 			// check bounding box
 			if (vertex.x < lowX)
@@ -43,7 +46,30 @@ bool Patch::addPoint(Point& vertex)
 
 		return false;
 	}
-	
+	else {
+		cerr << "Adding vertex at: " << vertex.x << " " << vertex.y << endl;
+		boundary.push_back(vertex);
+		
+		if (boundary.size() == 1) {
+			lowX = vertex.x;
+			lowY = vertex.y;
+		}
+
+		else  {
+			// check bounding box
+			if (vertex.x < lowX)
+				lowX = vertex.x;
+			else if (vertex.x > highX)
+				highX = vertex.x;
+
+			if (vertex.y < lowY)
+				lowY = vertex.y;
+			else if (vertex.y > highY)
+				highY = vertex.y;
+		}
+
+		return false;
+	}
 }
 
 void Patch::computeInterior()
@@ -51,10 +77,11 @@ void Patch::computeInterior()
 	interior.reserve(pow(double(boundary.size()),2));
 }
 
+
 void Patch::fillBoundary()
 {
 	vector<Point> border;
-	border.reserve(boundary.size() * 5);
+	border.reserve(pow(double(boundary.size()),2));
 	for (unsigned int i = 0; i < boundary.size(); ++i) {
 		linearize(boundary[i], boundary[((i+1) % boundary.size())], border);
 	}
@@ -62,8 +89,10 @@ void Patch::fillBoundary()
 	swap(border,boundary);
 }
 
+
 void Patch::linearize(Point pt1, Point pt2, vector<Point>& border)
 {
+	vector<Point> tempBorder;
 	int x0 = pt1.x;
 	int x1 = pt2.x;
 	int y0 = pt1.y;
@@ -75,7 +104,9 @@ void Patch::linearize(Point pt1, Point pt2, vector<Point>& border)
 		swap(x0,y0); 
 		swap(x1,y1);
 	}
+	bool reverse = false;
 	if (x0 > x1) {
+		reverse = true;
 		swap(x0,x1);
 		swap(y0,y1);
 	}
@@ -83,6 +114,8 @@ void Patch::linearize(Point pt1, Point pt2, vector<Point>& border)
 	// actual difference
 	int dX = x1 - x0;
 	int dY = abs(y1 - y0);
+
+	tempBorder.reserve(max(dX,dY));
 
 	double cumErr = 0;
 	double stepErr = double(dY) / double(dX); // error in each step
@@ -94,9 +127,9 @@ void Patch::linearize(Point pt1, Point pt2, vector<Point>& border)
 	for (; x0 <= x1; ++x0) {
 		// add point
 		if (steep)
-			border.push_back(Point(y0,x0));
+			tempBorder.push_back(Point(y0,x0));
 		else
-			border.push_back(Point(x0,y0));
+			tempBorder.push_back(Point(x0,y0));
 
 		// update error
 		cumErr += stepErr;
@@ -105,6 +138,11 @@ void Patch::linearize(Point pt1, Point pt2, vector<Point>& border)
 			--cumErr;
 		}
 	}
+
+	if (reverse)
+		border.insert(border.end(), tempBorder.rbegin(), tempBorder.rend());
+	else
+		border.insert(border.end(), tempBorder.begin(), tempBorder.end());
 }
 
 
@@ -113,6 +151,8 @@ void Patch::highLight(Image* img) const
 	for (unsigned int i = 0; i < boundary.size(); ++i)
 		for (int chn = RED; chn <= BLUE; ++chn)
 			img->setPixel_(boundary[i].x,boundary[i].y,chn,1);
+
+	cerr << "Boundary size: " << boundary.size();
 }
 
 
