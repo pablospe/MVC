@@ -16,6 +16,9 @@ Image* currentDstImage = NULL;
 Image* originalDstImage = NULL;
 Image* originalSrcImage = NULL;
 
+int windowSrc;
+int windowDst;
+
 
 int main (int argc, char** argv)
 {
@@ -26,7 +29,7 @@ int main (int argc, char** argv)
 	glutInitWindowSize(windowSrc_width, windowSrc_height);
 
 	// SOURCE WINDOW
-	int windowSrc = glutCreateWindow("Source");
+	windowSrc = glutCreateWindow("Source");
 
 	// register call back functions
 	glutDisplayFunc(display);
@@ -45,7 +48,7 @@ int main (int argc, char** argv)
 	// TARGET WINDOW
 	glutInitWindowPosition(500,100);
 	glutInitWindowSize(windowSrc_width, windowSrc_height);
-	int windowDst = glutCreateWindow("Target");
+	windowDst = glutCreateWindow("Target");
 	// register call back functions
 	glutDisplayFunc(display);
 	glutReshapeFunc(unreshapeDst);
@@ -75,18 +78,33 @@ void display ()
 		cerr << "OpenGL error: " << errString << endl;
 	}
 
+	
 	// clear the frame buffer
+	glutSetWindow(windowSrc);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	// draw the image
-	if (currentSrcImage)
-		currentSrcImage->glDrawPixelsWrapper();
+	glutSetWindow(windowDst);
+	glClear(GL_COLOR_BUFFER_BIT);
 
-	if (currentDstImage)
+
+	// draw the image
+	if (currentSrcImage) {
+		glutSetWindow(windowSrc);
+		currentSrcImage->glDrawPixelsWrapper();
+	}
+
+	if (currentDstImage){ 
+		glutSetWindow(windowDst);
 		currentDstImage->glDrawPixelsWrapper();
+	}
 
 	// swap buffers
-	glutSwapBuffers();  
+	glutSwapBuffers();
+
+
+	// swap buffers
+	glutSetWindow(windowSrc);
+	glutSwapBuffers();
 }
 
 
