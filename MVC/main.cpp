@@ -17,6 +17,7 @@ Image* originalDstImage = NULL;
 Image* originalSrcImage = NULL;
 
 Patch srcPatch;
+bool cloningSrc = false;
 
 int windowSrc;
 int windowDst;
@@ -29,7 +30,7 @@ int main (int argc, char** argv)
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
 
 	// SOURCE WINDOW
-	glutInitWindowPosition(100,500);
+	glutInitWindowPosition(100,400);
 	glutInitWindowSize(windowSrc_width, windowSrc_height);
 	windowSrc = glutCreateWindow("Source");
 	glutDisplayFunc(display);
@@ -42,7 +43,7 @@ int main (int argc, char** argv)
 	// END SOURCE WINDOW
 
 	// TARGET WINDOW
-	glutInitWindowPosition(500,500);
+	glutInitWindowPosition(500,400);
 	glutInitWindowSize(windowSrc_width, windowSrc_height);
 	windowDst = glutCreateWindow("Target");
 	glutDisplayFunc(display);

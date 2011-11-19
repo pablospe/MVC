@@ -18,7 +18,7 @@ extern Image* currentDstImage;
 extern Image* originalDstImage;
 
 extern Patch srcPatch;
-extern 
+extern bool cloningSrc;
 
 int  main (int argc, char** argv);
 void display();

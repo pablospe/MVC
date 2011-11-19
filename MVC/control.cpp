@@ -15,6 +15,8 @@ enum {
 	M_DST_INFO = 7,
 	M_DST_REVERT = 8,
 
+	M_SRC_CLONE = 9,
+
 	M_LAST_ENUM
 } MENU_ITEMS;
 
@@ -26,8 +28,12 @@ int make_menuSrc ()
 	glutAddMenuEntry( "Get Source Image Info",		M_SRC_INFO);
 	glutAddMenuEntry( "Revert",		M_SRC_REVERT);
 
+	int clone = glutCreateMenu(menu_func);
+	glutAddMenuEntry( "Outline Path", M_SRC_CLONE);
+
 	int main = glutCreateMenu(menu_func);
 	glutAddSubMenu(   "File",		file);
+	glutAddSubMenu(   "Clone",		clone);
 	glutAddMenuEntry( "Help",		M_HELP);
 	glutAddMenuEntry( "Quit",		M_QUIT);
 
@@ -121,13 +127,26 @@ void menu_func (int value)
 		image_revertDst();
 		break;
 
-	default:
-		process_func(value);
+	// Cloning
+	case M_SRC_CLONE:
+		initClone();
+		break;
+	
 	}
+
 	return;
 }
 
-// all other menu functions
+void initClone()
+{
+	cout << "Begin selecting vertices of patch or tracing by holding down the left mouse. ";
+	cout << "The polygon must not intersect itself. ";
+	cout << "Close the patch by selecting a pixel close to the origin pixel" << endl;
+
+	cloningSrc = true;
+}
+
+/***
 void process_func (int value)
 {
 	cerr << "in process_func" <<  endl;
@@ -138,7 +157,6 @@ void process_func (int value)
 
 	if (resultImage != NULL)
 	{
-		/***
 		delete currentImage;
 		currentImage = resultImage;
 
@@ -149,9 +167,9 @@ void process_func (int value)
 		cerr << "done!" << endl;
 
 		glutPostRedisplay();
-		***/
 	}
 }
+***/
 
 void keyboard_func (unsigned char key, int x, int y)
 {
@@ -173,18 +191,19 @@ void keyboard_func (unsigned char key, int x, int y)
 
 void mouse_click_src (int button, int state, int x, int y)
 {
-	if (currentSrcImage) {
-
-		for (int chn = RED; chn <= BLUE; ++chn)
-			currentSrcImage->setPixel_(x,y,chn, 0);
+	if (currentSrcImage && cloningSrc) {
 
 		if (button == GLUT_DOWN) {
 			Point vertex(x,y);
-			srcPatch.addPoint(vertex);
-			if (srcPatch.isClosed()) {
-				cerr << "closed" << endl;	
+			if (srcPatch.addPoint(vertex)) {
+				cout << "Patch is closed" << endl;
 				srcPatch.highLight(currentSrcImage);
+				cloningSrc = false;
 			}
+
+			else
+				for (int chn = RED; chn <= BLUE; ++chn)
+					currentSrcImage->setPixel_(x,y,chn, 0);
 		}
 
 		glutPostRedisplay();
