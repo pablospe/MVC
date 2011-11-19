@@ -15,9 +15,12 @@ int make_menu();
 // glut callbacks
 void menu_func (int value);
 void keyboard_func (unsigned char key, int x, int y);
+
+/*** unused
 void mouse_click_func (int button, int state, int x, int y);
 void mouse_move_func (int x, int y);
 void idle_func ();
+***/
 
 // menu calls
 void menu_help ();
@@ -26,9 +29,6 @@ void image_save (const char* filename);
 void image_print_info ();
 void image_revert ();
 void process_func (int value);
-
-// text mode calls
-void textMenuLoop ();
 
 
 #endif // CONTROL_H
