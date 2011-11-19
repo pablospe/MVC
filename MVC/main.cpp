@@ -14,6 +14,8 @@ int windowDst_height = 300;
 Image* currentSrcImage = NULL;
 Image* currentDstImage = NULL;
 Image* originalDstImage = NULL;
+Image* originalSrcImage = NULL;
+
 
 int main (int argc, char** argv)
 {

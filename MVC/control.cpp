@@ -1,8 +1,6 @@
 #include "control.h"
 #include "main.h"
 #include <stdlib.h>
-#include "image.h"
-
 
 enum {
 	M_QUIT = 0,
@@ -181,36 +179,36 @@ void menu_help ()
 
 void image_loadSrc (const char* filename)
 {
-	image_load(filename, currentSrcImage, false);
+	image_load(filename, originalSrcImage, currentSrcImage, false);
 }
 
 void image_loadDst (const char* filename)
 {
-	image_load(filename, currentDstImage, true);
+	image_load(filename, originalDstImage, currentDstImage, true);
 }
 
 
-void image_load (const char* filename, Image* curr, bool dst)
+void image_load (const char* filename, Image*& orig, Image*& curr, bool dst)
 {
 	if (curr)
 		delete curr;
-	//if (orig)
-	//	delete orig;
+	if (orig)
+		delete orig;
 	curr = NULL;
-	//orig = NULL;
+	orig = NULL;
 
-	///orig = new Image();
-	//orig->read(filename);
+	orig = new Image();
+	orig->read(filename);
 
-	//f (orig->good())
+	if (orig->good())
 	{  
-	//	curr = new Image(*orig);
-	//	reshape(curr->getWidth(), curr->getHeight(), dst);
+		curr = new Image(*orig);
+		reshape(curr->getWidth(), curr->getHeight(), dst);
 	}
-	//else
+	else
 	{
-	//	delete orig;  
-	//	orig = NULL;
+		delete orig;  
+		orig = NULL;
 		cerr << "Couldn't load image " << filename << "!" << endl;
 		return;
 	}
@@ -264,28 +262,28 @@ void image_print_info (bool dst)
 
 void image_revertSrc()
 {
-	image_revert(currentSrcImage, windowSrc_width, windowSrc_height, false);
+	image_revert(originalSrcImage, currentSrcImage, windowSrc_width, windowSrc_height, false);
 }
 
 void image_revertDst()
 {
-	image_revert(currentDstImage, windowDst_width, windowDst_height, true);
+	image_revert(originalDstImage, currentDstImage, windowDst_width, windowDst_height, true);
 }
 
-void image_revert (Image* curr, int width, int height, bool dst)
+void image_revert (Image*& orig, Image*& curr, int width, int height, bool dst)
 {
 	if (curr)
 		delete curr;
 
-	//if (orig)
+	if (orig)
 	{
-	//	curr = new Image(*orig);
+		curr = new Image(*orig);
 
 		if (width  != curr->getWidth() ||
 			height != curr->getHeight())
 			reshape(curr->getWidth(), curr->getHeight(), dst);
 	}
-	//else
+	else
 	{
 		cerr << "No image!" << endl;
 		return;
