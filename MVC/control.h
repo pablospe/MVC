@@ -11,6 +11,7 @@
 
 // init calls
 int make_menu();
+int make_menuR();
 
 // glut callbacks
 void menu_func (int value);

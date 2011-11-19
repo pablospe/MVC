@@ -7,6 +7,8 @@
 
 extern int window_width;
 extern int window_height;
+extern int glass_width;
+extern int glass_height;
 
 extern Image* currentImage;
 extern Image* originalImage;

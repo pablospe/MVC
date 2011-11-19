@@ -19,7 +19,6 @@ static const int maxvals[9] = { 0, 1, 3, 7, 15, 31, 63, 127, 255 };
 
 static inline unsigned char val2bits (double v, int b)
 {
-
 	return (unsigned char) (floor(v * maxvals[b] + 0.5) / maxvals[b] * 255);
 }
 

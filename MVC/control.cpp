@@ -22,6 +22,23 @@ int make_menu ()
 	glutAddMenuEntry( "Open...",		M_FILE_OPEN);
 	glutAddMenuEntry( "Save...",		M_FILE_SAVE);
 	glutAddMenuEntry( "Get Image Info",		M_FILE_INFO);
+
+	int main = glutCreateMenu(menu_func);
+	glutAddSubMenu(   "File",		file);
+	glutAddMenuEntry( "Help",		M_HELP);
+	glutAddMenuEntry( "Quit",		M_QUIT);
+
+	glutAttachMenu(GLUT_RIGHT_BUTTON);
+
+	return main;
+}
+
+int make_menuR ()
+{
+	int file = glutCreateMenu(menu_func);
+	glutAddMenuEntry( "Open...",		M_FILE_OPEN);
+	glutAddMenuEntry( "Save...",		M_FILE_SAVE);
+	glutAddMenuEntry( "Get Image Info",		M_FILE_INFO);
 	glutAddMenuEntry( "Revert",		M_FILE_REVERT);
 
 	int main = glutCreateMenu(menu_func);

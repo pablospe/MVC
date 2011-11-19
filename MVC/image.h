@@ -3,29 +3,16 @@ class Image;
 #ifndef IMAGE_H
 #define IMAGE_H
 
-
 #include <fstream>
 #include "common.h"
 
 using namespace std;
 
-
-/*
-* definitions for channel values.  for example,
-*    image->getPixel(0,0,GREEN);
-* gets the green value at pixel 0,0 in image.
-*/
 #define RED	0
 #define GREEN	1
 #define BLUE	2
 
 
-
-/*
-* struct to contain an entire pixel's data, up to three channels.  if
-* only one channel then all bur r values in
-* this struct will be ignored.  
-*/
 class Pixel
 {
 public:
@@ -37,12 +24,12 @@ public:
 	double getColor(int chan);
 	void setColor(int chan, double value);
 
-
 private:
 	double		col[3];
 };
 
 ostream &operator<<(ostream &out_file, Pixel& thePixel);
+
 /*
 * generic multi channel 8-bit max image class.  can read and write
 * 8 and 24 bit uncompressed BMP files and supports some useful OpenGL 
@@ -125,9 +112,7 @@ public:
 
 
 private:
-
 	int		index(int x, int y, int c);
-
 	int		width;
 	int		height;
 	int		bits;		// number of bits per pixel per channel

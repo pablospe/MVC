@@ -8,6 +8,9 @@
 int  window_width  = 300;
 int  window_height = 300;
 
+int glass_width = 300;
+int glass_height = 300;
+
 Image* currentImage  = NULL;
 Image* originalImage = NULL;
 
@@ -18,7 +21,9 @@ int main (int argc, char** argv)
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
     glutInitWindowPosition(100,100);
     glutInitWindowSize(window_width, window_height);
-    glutCreateWindow("Source");
+
+	// SOURCE WINDOW
+    int window1 = glutCreateWindow("Source");
  
     // register call back functions
     glutDisplayFunc(display);
@@ -32,6 +37,24 @@ int main (int argc, char** argv)
 
     // register keyboard callback function
     glutKeyboardFunc(keyboard_func);
+	// END SOURCE WINDOW
+
+	// TARGET WINDOW
+	glutInitWindowPosition(500,100);
+	int window2 = glutCreateWindow("Target");
+	// register call back functions
+    glutDisplayFunc(display);
+    glutReshapeFunc(unreshape);
+
+    glClearColor(0.0,0.0,0.0,0.0);
+    glDisable(GL_DEPTH_TEST);
+
+    // setup main menu
+    make_menuR();
+
+    // register keyboard callback function
+    glutKeyboardFunc(keyboard_func);
+	// END TARGET WINDOW
 
     // wait for something to happen
     glutMainLoop();
