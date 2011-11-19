@@ -17,6 +17,7 @@ public:
 	void highLight(Image* img) const;
 	void clear();
 
+	int lowX, lowY, highX, highY;
 	vector<Point> interior;
 	vector<Point> boundary;
 	int img_width, img_height;

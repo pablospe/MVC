@@ -2,26 +2,48 @@
 #include "main.h"
 
 Patch::Patch()
-:	img_width(0), img_height(0)
+:	img_width(0), img_height(0),
+	lowX(0), lowY(0), highX(0), highY(0)
 {
 	boundary.clear();
 }
 
 Patch::Patch(int width, int height)
-:	img_width(width), img_height(height)
+:	img_width(width), img_height(height),
+	lowX(0), lowY(0), highX(0), highY(0)
 {
 	boundary.clear();
 }
 
 bool Patch::addPoint(Point& vertex)
 {
-	if (boundary.size() > 3 && close(vertex,boundary[0]))
+	if ((boundary.size() > 3) && (close(vertex,boundary[0])))
 		return true;
 	else {
 		cerr << "Adding vertex at: " << vertex.x << " " << vertex.y << endl;
 		boundary.push_back(vertex);
+
+		if (boundary.size() == 1) {
+			lowX = vertex.x;
+			lowY = vertex.y;
+		}
+		
+		else  {
+			// check bounding box
+			if (vertex.x < lowX)
+				lowX = vertex.x;
+			else if (vertex.x > highX)
+				highX = vertex.x;
+
+			if (vertex.y < lowY)
+				lowY = vertex.y;
+			else if (vertex.y > highY)
+				highY = vertex.y;
+		}
+
 		return false;
 	}
+	
 }
 
 void Patch::computeInterior()
@@ -98,4 +120,5 @@ void Patch::clear()
 {
 	boundary.clear();
 	interior.clear();
+	lowX=lowY=highX=highY=0;
 }
