@@ -29,7 +29,7 @@ int main (int argc, char** argv)
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
 
 	// SOURCE WINDOW
-	glutInitWindowPosition(100,100);
+	glutInitWindowPosition(100,500);
 	glutInitWindowSize(windowSrc_width, windowSrc_height);
 	windowSrc = glutCreateWindow("Source");
 	glutDisplayFunc(display);
@@ -42,7 +42,7 @@ int main (int argc, char** argv)
 	// END SOURCE WINDOW
 
 	// TARGET WINDOW
-	glutInitWindowPosition(500,100);
+	glutInitWindowPosition(500,500);
 	glutInitWindowSize(windowSrc_width, windowSrc_height);
 	windowDst = glutCreateWindow("Target");
 	glutDisplayFunc(display);

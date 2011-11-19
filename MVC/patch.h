@@ -12,8 +12,8 @@ public:
 	Patch(int width, int height);
 	void addPoint(Point& vertex);
 	void computeInterior();
-
 	void highLight(Image* img);
+	bool isClosed();
 
 	vector<Point> interior;
 	vector<Point> boundary;

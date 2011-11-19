@@ -18,6 +18,7 @@ extern Image* currentDstImage;
 extern Image* originalDstImage;
 
 extern Patch srcPatch;
+extern 
 
 int  main (int argc, char** argv);
 void display();

@@ -24,7 +24,7 @@ int make_menuSrc ()
 	int file = glutCreateMenu(menu_func);
 	glutAddMenuEntry( "Open...",		M_SRC_OPEN);
 	glutAddMenuEntry( "Get Source Image Info",		M_SRC_INFO);
-	glutAddMenuEntry( "Revert",		M_DST_REVERT);
+	glutAddMenuEntry( "Revert",		M_SRC_REVERT);
 
 	int main = glutCreateMenu(menu_func);
 	glutAddSubMenu(   "File",		file);
@@ -173,12 +173,27 @@ void keyboard_func (unsigned char key, int x, int y)
 
 void mouse_click_src (int button, int state, int x, int y)
 {
-	Point vertex(x,y);
+	if (currentSrcImage) {
+
+		for (int chn = RED; chn <= BLUE; ++chn)
+			currentSrcImage->setPixel_(x,y,chn, 0);
+
+		if (button == GLUT_DOWN) {
+			Point vertex(x,y);
+			srcPatch.addPoint(vertex);
+			if (srcPatch.isClosed()) {
+				cerr << "closed" << endl;	
+				srcPatch.highLight(currentSrcImage);
+			}
+		}
+
+		glutPostRedisplay();
+	}
 }
 
 void mouse_click_dst (int button, int state, int x, int y)
 {
-	cerr << x << y << endl;
+	cerr << x << " " << y << endl;
 }
 
 void menu_help ()
@@ -189,6 +204,7 @@ void menu_help ()
 void image_loadSrc (const char* filename)
 {
 	image_load(filename, originalSrcImage, currentSrcImage, false);
+
 	srcPatch.img_width = originalSrcImage->getWidth();
 	srcPatch.img_height = originalSrcImage->getHeight();
 }
@@ -283,6 +299,7 @@ void image_revertDst()
 
 void image_revert (Image*& orig, Image*& curr, int width, int height, bool dst)
 {
+	
 	if (curr)
 		delete curr;
 
