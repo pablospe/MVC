@@ -9,6 +9,7 @@
 #include <assert.h>
 #include <vector>
 
+class Image;
 
 // constants
 

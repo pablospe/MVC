@@ -1,27 +1,32 @@
 #include "control.h"
 #include "main.h"
 #include <stdlib.h>
+#include "image.h"
 
 
 enum {
 	M_QUIT = 0,
 	M_HELP = 1,
 
-	M_FILE_OPEN = 2,
-	M_FILE_SAVE = 3,
-	M_FILE_INFO = 4,
-	M_FILE_REVERT = 5,
+	M_SRC_OPEN = 2,
+	M_SRC_INFO = 3,
+	M_SRC_REVERT = 4,
+
+	M_DST_OPEN = 5,
+	M_DST_SAVE = 6,
+	M_DST_INFO = 7,
+	M_DST_REVERT = 8,
 
 	M_LAST_ENUM
 } MENU_ITEMS;
 
 
-int make_menu ()
+int make_menuSrc ()
 {
 	int file = glutCreateMenu(menu_func);
-	glutAddMenuEntry( "Open...",		M_FILE_OPEN);
-	glutAddMenuEntry( "Save...",		M_FILE_SAVE);
-	glutAddMenuEntry( "Get Image Info",		M_FILE_INFO);
+	glutAddMenuEntry( "Open...",		M_SRC_OPEN);
+	glutAddMenuEntry( "Get Source Image Info",		M_SRC_INFO);
+	glutAddMenuEntry( "Revert",		M_DST_REVERT);
 
 	int main = glutCreateMenu(menu_func);
 	glutAddSubMenu(   "File",		file);
@@ -33,13 +38,13 @@ int make_menu ()
 	return main;
 }
 
-int make_menuR ()
+int make_menuDst ()
 {
 	int file = glutCreateMenu(menu_func);
-	glutAddMenuEntry( "Open...",		M_FILE_OPEN);
-	glutAddMenuEntry( "Save...",		M_FILE_SAVE);
-	glutAddMenuEntry( "Get Image Info",		M_FILE_INFO);
-	glutAddMenuEntry( "Revert",		M_FILE_REVERT);
+	glutAddMenuEntry( "Open...",		M_DST_OPEN);
+	glutAddMenuEntry( "Save...",		M_DST_SAVE);
+	glutAddMenuEntry( "Get Image Info",		M_DST_INFO);
+	glutAddMenuEntry( "Revert",		M_DST_REVERT);
 
 	int main = glutCreateMenu(menu_func);
 	glutAddSubMenu(   "File",		file);
@@ -81,28 +86,41 @@ void menu_func (int value)
 		;;
 
 
-	case M_FILE_OPEN:   // enum #2
+	case M_SRC_OPEN:   // enum #2
 		cerr << "Open file (string - no spaces) : ";
 		cin  >> filename;
 		checkStream(cin);
-		image_load(filename);
+		image_loadSrc(filename);
 		break;
 
+	case M_SRC_INFO:
+		image_print_info(false);
+		break;
 
-	case M_FILE_SAVE:   // enum #3
+	case M_SRC_REVERT:
+		image_revertSrc();
+		break;
+
+	case M_DST_OPEN:   // enum #2
+		cerr << "Open file (string - no spaces) : ";
+		cin  >> filename;
+		checkStream(cin);
+		image_loadDst(filename);
+		break;
+
+	case M_DST_SAVE:   // enum #3
 		cerr << "Save as (string - no spaces) : ";
 		cin  >> filename;
 		checkStream(cin);
 		image_save(filename);
 		break;
 
-
-	case M_FILE_INFO:
-		image_print_info();
+	case M_DST_INFO:
+		image_print_info(true);
 		break;
 
-	case M_FILE_REVERT:
-		image_revert();
+	case M_DST_REVERT:
+		image_revertDst();
 		break;
 
 	default:
@@ -114,6 +132,7 @@ void menu_func (int value)
 // all other menu functions
 void process_func (int value)
 {
+	cerr << "in process_func" <<  endl;
 	// variables used in the switch statement
 	char filename[MAX_LINE];
 	Image* resultImage = NULL;
@@ -121,6 +140,7 @@ void process_func (int value)
 
 	if (resultImage != NULL)
 	{
+		/***
 		delete currentImage;
 		currentImage = resultImage;
 
@@ -131,6 +151,7 @@ void process_func (int value)
 		cerr << "done!" << endl;
 
 		glutPostRedisplay();
+		***/
 	}
 }
 
@@ -158,29 +179,38 @@ void menu_help ()
 	cerr << "not implemented yet" << endl;
 }
 
-
-
-void image_load (const char* filename)
+void image_loadSrc (const char* filename)
 {
-	if (currentImage)
-		delete currentImage;
-	if (originalImage)
-		delete originalImage;
-	currentImage  = NULL;
-	originalImage = NULL;
+	image_load(filename, currentSrcImage, false);
+}
 
-	originalImage = new Image();
-	originalImage->read(filename);
+void image_loadDst (const char* filename)
+{
+	image_load(filename, currentDstImage, true);
+}
 
-	if (originalImage->good())
+
+void image_load (const char* filename, Image* curr, bool dst)
+{
+	if (curr)
+		delete curr;
+	//if (orig)
+	//	delete orig;
+	curr = NULL;
+	//orig = NULL;
+
+	///orig = new Image();
+	//orig->read(filename);
+
+	//f (orig->good())
 	{  
-		currentImage = new Image(*originalImage);
-		reshape(currentImage->getWidth(), currentImage->getHeight());
+	//	curr = new Image(*orig);
+	//	reshape(curr->getWidth(), curr->getHeight(), dst);
 	}
-	else
+	//else
 	{
-		delete originalImage;  
-		originalImage = NULL;
+	//	delete orig;  
+	//	orig = NULL;
 		cerr << "Couldn't load image " << filename << "!" << endl;
 		return;
 	}
@@ -192,17 +222,17 @@ void image_load (const char* filename)
 
 void image_save (const char* filename)
 {
-	if (currentImage)
+	if (currentDstImage)
 	{
-		if (currentImage->write(filename) == 0)
+		if (currentDstImage->write(filename) == 0)
 		{
 			//delete originalImage;
 			//originalImage = new Image(*currentImage);
 		}
 	}  
-	else if (originalImage)
+	else if (originalDstImage)
 	{
-		originalImage->write(filename);
+		originalDstImage->write(filename);
 	}
 	else
 	{
@@ -214,31 +244,48 @@ void image_save (const char* filename)
 }
 
 
-void image_print_info ()
+void image_print_info (bool dst)
 {  
-	if (currentImage) {
-		cerr << "width:    " << currentImage->getWidth() << endl
-			<< "height:   " << currentImage->getHeight() << endl
-			<< "bits:     " << currentImage->getBits() << endl;
+	if (currentSrcImage && !dst) {
+		cerr << "width:    " << currentSrcImage->getWidth() << endl
+			<< "height:   " << currentSrcImage->getHeight() << endl
+			<< "bits:     " << currentSrcImage->getBits() << endl;
 	}
+
+	else if (currentDstImage && dst) {
+		cerr << "width:    " << currentDstImage->getWidth() << endl
+			<< "height:   " << currentDstImage->getHeight() << endl
+			<< "bits:     " << currentDstImage->getBits() << endl;
+	}
+
 	cerr << "done!" << endl;
 }
 
 
-void image_revert ()
+void image_revertSrc()
 {
-	if (currentImage)
-		delete currentImage;
+	image_revert(currentSrcImage, windowSrc_width, windowSrc_height, false);
+}
 
-	if (originalImage)
+void image_revertDst()
+{
+	image_revert(currentDstImage, windowDst_width, windowDst_height, true);
+}
+
+void image_revert (Image* curr, int width, int height, bool dst)
+{
+	if (curr)
+		delete curr;
+
+	//if (orig)
 	{
-		currentImage = new Image(*originalImage);
+	//	curr = new Image(*orig);
 
-		if (window_width  != currentImage->getWidth() ||
-			window_height != currentImage->getHeight())
-			reshape(currentImage->getWidth(), currentImage->getHeight());
+		if (width  != curr->getWidth() ||
+			height != curr->getHeight())
+			reshape(curr->getWidth(), curr->getHeight(), dst);
 	}
-	else
+	//else
 	{
 		cerr << "No image!" << endl;
 		return;

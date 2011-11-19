@@ -1,22 +1,36 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-
 #include "common.h"
 #include "image.h"
 
-extern int window_width;
-extern int window_height;
-extern int glass_width;
-extern int glass_height;
+struct Window {
+	int width;
+	int height;
+	Image* original;
+	Image* current;
+	bool dst;
+};
 
-extern Image* currentImage;
-extern Image* originalImage;
+
+extern int windowSrc_width;
+extern int windowSrc_height;
+extern int windowDst_width;
+extern int windowDst_height;
+
+extern Image* currentDstImage;
+extern Image* originalDstImage;
+
+extern Image* currentSrcImage;
+extern Image* originalSrcImage;
+
+
 
 int  main (int argc, char** argv);
-void display ();
-void unreshape (int width, int height);
-void reshape (int width, int height);
+void display();
+void unreshapeSrc (int width, int height);
+void unreshapeDst (int width, int height);
+void reshape (int width, int height, bool dst);
 
 
 

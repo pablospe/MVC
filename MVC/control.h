@@ -2,16 +2,12 @@
 #define CONTROL_H
 
 #include "common.h"
-
-
-/*
- * IMPORTANT - DO NOT CHANGE THIS FILE - IMPORTANT
- */
+//#include "image.h"
 
 
 // init calls
-int make_menu();
-int make_menuR();
+int make_menuSrc();
+int make_menuDst();
 
 // glut callbacks
 void menu_func (int value);
@@ -25,10 +21,17 @@ void idle_func ();
 
 // menu calls
 void menu_help ();
-void image_load (const char* filename);
+
+void image_loadSrc (const char* filename);
+void image_loadDst (const char* filename);
+void image_load (const char* filename,  Image* curr, bool dst);
+
 void image_save (const char* filename);
-void image_print_info ();
-void image_revert ();
+void image_print_info (bool dst);
+
+void image_revertSrc ();
+void image_revertDst ();
+void image_revert (Image* curr, int width, int height, bool dst);
 void process_func (int value);
 
 
