@@ -12,6 +12,10 @@ using namespace std;
 #define GREEN	1
 #define BLUE	2
 
+struct Point {
+	int x;
+	int y;
+};
 
 class Pixel
 {
