@@ -6,10 +6,10 @@
 #include "image.h"
 #include "patch.h"
 
-extern int windowSrc_width;
-extern int windowSrc_height;
-extern int windowDst_width;
-extern int windowDst_height;
+extern int windowWidthSrc;
+extern int windowHeightSrc;
+extern int windowWidthDst;
+extern int windowHeightDst;
 
 extern Image* currentSrcImage;
 extern Image* originalSrcImage;

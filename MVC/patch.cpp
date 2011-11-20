@@ -80,14 +80,14 @@ void Patch::fillBoundary()
 	vector<Point> border;
 	border.reserve(pow(double(boundary.size()),2));
 	for (unsigned int i = 0; i < boundary.size(); ++i) {
-		linearize(boundary[i], boundary[((i+1) % boundary.size())], border);
+		fillLine(boundary[i], boundary[((i+1) % boundary.size())], border);
 	}
 
 	swap(border,boundary);
 }
 
 
-void Patch::linearize(Point pt1, Point pt2, vector<Point>& border)
+void Patch::fillLine(Point pt1, Point pt2, vector<Point>& border)
 {
 	vector<Point> tempBorder;
 	int x0 = pt1.x;

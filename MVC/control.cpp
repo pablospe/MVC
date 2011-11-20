@@ -21,17 +21,17 @@ enum {
 } MENU_ITEMS;
 
 
-int make_menuSrc ()
+int makeMenuSrc ()
 {
-	int file = glutCreateMenu(menu_func);
+	int file = glutCreateMenu(menuFunc);
 	glutAddMenuEntry( "Open...",		M_SRC_OPEN);
 	glutAddMenuEntry( "Get Source Image Info",		M_SRC_INFO);
 	glutAddMenuEntry( "Revert",		M_SRC_REVERT);
 
-	int clone = glutCreateMenu(menu_func);
+	int clone = glutCreateMenu(menuFunc);
 	glutAddMenuEntry( "Outline Path", M_SRC_CLONE);
 
-	int main = glutCreateMenu(menu_func);
+	int main = glutCreateMenu(menuFunc);
 	glutAddSubMenu(   "File",		file);
 	glutAddSubMenu(   "Clone",		clone);
 	glutAddMenuEntry( "Help",		M_HELP);
@@ -42,15 +42,15 @@ int make_menuSrc ()
 	return main;
 }
 
-int make_menuDst ()
+int makeMenuDst ()
 {
-	int file = glutCreateMenu(menu_func);
+	int file = glutCreateMenu(menuFunc);
 	glutAddMenuEntry( "Open...",		M_DST_OPEN);
 	glutAddMenuEntry( "Save...",		M_DST_SAVE);
 	glutAddMenuEntry( "Get Image Info",		M_DST_INFO);
 	glutAddMenuEntry( "Revert",		M_DST_REVERT);
 
-	int main = glutCreateMenu(menu_func);
+	int main = glutCreateMenu(menuFunc);
 	glutAddSubMenu(   "File",		file);
 	glutAddMenuEntry( "Help",		M_HELP);
 	glutAddMenuEntry( "Quit",		M_QUIT);
@@ -71,7 +71,7 @@ static inline void checkStream (const istream& in)
 }
 
 
-void menu_func (int value)
+void menuFunc (int value)
 {
 	// variables used in the switch statement
 	char filename[MAX_LINE];
@@ -85,7 +85,7 @@ void menu_func (int value)
 
 
 	case M_HELP:
-		menu_help();
+		menuHelp();
 		break;
 		;;
 
@@ -94,38 +94,38 @@ void menu_func (int value)
 		cerr << "Open file (string - no spaces) : ";
 		cin  >> filename;
 		checkStream(cin);
-		image_loadSrc(filename);
+		imageLoadSrc(filename);
 		break;
 
 	case M_SRC_INFO:
-		image_print_info(false);
+		imagePrint(false);
 		break;
 
 	case M_SRC_REVERT:
 		srcPatch.clear();
-		image_revertSrc();
+		imageRevertSrc();
 		break;
 
 	case M_DST_OPEN:   // enum #2
 		cerr << "Open file (string - no spaces) : ";
 		cin  >> filename;
 		checkStream(cin);
-		image_loadDst(filename);
+		imageLoadDst(filename);
 		break;
 
 	case M_DST_SAVE:   // enum #3
 		cerr << "Save as (string - no spaces) : ";
 		cin  >> filename;
 		checkStream(cin);
-		image_save(filename);
+		imageSave(filename);
 		break;
 
 	case M_DST_INFO:
-		image_print_info(true);
+		imagePrint(true);
 		break;
 
 	case M_DST_REVERT:
-		image_revertDst();
+		imageRevertDst();
 		break;
 
 	// Cloning
@@ -172,13 +172,13 @@ void process_func (int value)
 }
 ***/
 
-void keyboard_func (unsigned char key, int x, int y)
+void keyboardFunc (unsigned char key, int x, int y)
 {
 	switch (key)
 	{
 	case 'H':
 	case 'h':
-		menu_help();
+		menuHelp();
 		break;
 		;;
 
@@ -190,7 +190,7 @@ void keyboard_func (unsigned char key, int x, int y)
 	}
 }
 
-void mouse_click_src (int button, int state, int x, int y)
+void mouseClickSrc (int button, int state, int x, int y)
 {
 	if (currentSrcImage && cloningSrc) {
 
@@ -213,31 +213,31 @@ void mouse_click_src (int button, int state, int x, int y)
 	}
 }
 
-void mouse_click_dst (int button, int state, int x, int y)
+void mouseClickDst (int button, int state, int x, int y)
 {
 	cerr << x << " " << y << endl;
 }
 
-void menu_help ()
+void menuHelp ()
 {
 	cerr << "not implemented yet" << endl;
 }
 
-void image_loadSrc (const char* filename)
+void imageLoadSrc (const char* filename)
 {
-	image_load(filename, originalSrcImage, currentSrcImage, false);
+	imageLoad(filename, originalSrcImage, currentSrcImage, false);
 
 	srcPatch.img_width = originalSrcImage->getWidth();
 	srcPatch.img_height = originalSrcImage->getHeight();
 }
 
-void image_loadDst (const char* filename)
+void imageLoadDst (const char* filename)
 {
-	image_load(filename, originalDstImage, currentDstImage, true);
+	imageLoad(filename, originalDstImage, currentDstImage, true);
 }
 
 
-void image_load (const char* filename, Image*& orig, Image*& curr, bool dst)
+void imageLoad (const char* filename, Image*& orig, Image*& curr, bool dst)
 {
 	if (curr)
 		delete curr;
@@ -267,7 +267,7 @@ void image_load (const char* filename, Image*& orig, Image*& curr, bool dst)
 }  
 
 
-void image_save (const char* filename)
+void imageSave (const char* filename)
 {
 	if (currentDstImage)
 	{
@@ -291,7 +291,7 @@ void image_save (const char* filename)
 }
 
 
-void image_print_info (bool dst)
+void imagePrint (bool dst)
 {  
 	if (currentSrcImage && !dst) {
 		cerr << "width:    " << currentSrcImage->getWidth() << endl
@@ -309,17 +309,17 @@ void image_print_info (bool dst)
 }
 
 
-void image_revertSrc()
+void imageRevertSrc()
 {
-	image_revert(originalSrcImage, currentSrcImage, windowSrc_width, windowSrc_height, false);
+	imageRevert(originalSrcImage, currentSrcImage, windowWidthSrc, windowHeightSrc, false);
 }
 
-void image_revertDst()
+void imageRevertDst()
 {
-	image_revert(originalDstImage, currentDstImage, windowDst_width, windowDst_height, true);
+	imageRevert(originalDstImage, currentDstImage, windowWidthDst, windowHeightDst, true);
 }
 
-void image_revert (Image*& orig, Image*& curr, int width, int height, bool dst)
+void imageRevert (Image*& orig, Image*& curr, int width, int height, bool dst)
 {
 	
 	if (curr)
