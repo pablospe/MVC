@@ -7,6 +7,7 @@ Patch::Patch()
 {
 	boundary.clear();
 	interior.clear();
+	rows.clear();
 }
 
 Patch::Patch(int width, int height)
@@ -15,6 +16,7 @@ Patch::Patch(int width, int height)
 {
 	boundary.clear();
 	interior.clear();
+	rows.clear();
 }
 
 bool Patch::addPoint(Point& vertex)
@@ -70,11 +72,6 @@ bool Patch::addPoint(Point& vertex)
 
 		return false;
 	}
-}
-
-void Patch::computeInterior()
-{
-	interior.reserve(pow(double(boundary.size()),2));
 }
 
 
@@ -146,13 +143,11 @@ void Patch::linearize(Point pt1, Point pt2, vector<Point>& border)
 }
 
 
-void Patch::highLight(Image* img) const
+void Patch::highLight(Image* img)
 {
 	for (unsigned int i = 0; i < boundary.size(); ++i)
 		for (int chn = RED; chn <= BLUE; ++chn)
 			img->setPixel_(boundary[i].x,boundary[i].y,chn,1);
-
-	cerr << "Boundary size: " << boundary.size();
 }
 
 
@@ -160,5 +155,60 @@ void Patch::clear()
 {
 	boundary.clear();
 	interior.clear();
+	rows.clear();
 	lowX=lowY=highX=highY=0;
+}
+
+
+void Patch::computeRows()
+{
+	for (unsigned int i = 0; i < boundary.size(); ++i) {
+		int x = boundary[i].x;
+		int y = boundary[i].y;
+
+		if (rows.count(x) == 0) {
+			vector<int> yValues;
+			yValues.push_back(y);
+			rows[x] = yValues;
+		}
+
+		else
+			rows[x].push_back(y);
+	}
+}
+
+void Patch::computeInterior()
+{
+	computeRows();
+	interior.reserve(pow(double(boundary.size()),2));
+
+	for (int x = lowX; x <= highX; ++x) {
+		for (int y = lowY; y < highY; ++y) {
+			if (interiorPoint(x,y))
+				interior.push_back(Point(x,y));
+		}
+	}
+
+}
+
+bool Patch::interiorPoint(int x, int y)
+{
+	if (rows.count(x) == 0)
+		return false;
+	else if (rows[x].size() == 1)
+		return (y == rows[x][0]);
+	else {
+		int intersection = 0;
+		for (unsigned int i = 0; i < rows[x].size(); ++i)
+			if (rows[x][i] > y)
+				++intersection;
+		return (intersection % 2 == 1);
+	}
+}
+
+void Patch::color(Image* img)
+{
+	for (unsigned int i = 0; i < interior.size(); ++i)
+		for (int chn = RED; chn <= BLUE; ++chn)
+			img->setPixel_(interior[i].x,interior[i].y,chn,1);
 }

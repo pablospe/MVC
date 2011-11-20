@@ -199,7 +199,8 @@ void mouse_click_src (int button, int state, int x, int y)
 			if (srcPatch.addPoint(vertex)) {
 				cout << "Patch is closed" << endl;
 				srcPatch.fillBoundary();
-				srcPatch.highLight(currentSrcImage);
+				srcPatch.computeInterior();
+				srcPatch.color(currentSrcImage);
 				cloningSrc = false;
 			}
 
