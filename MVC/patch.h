@@ -20,6 +20,8 @@ public:
 	void color(Image* img);
 	void clear();
 
+	bool checkRow(int x,int y, vector<int>& yBoundary);
+
 	int lowX, lowY, highX, highY;
 	vector<Point> interior;
 	vector<Point> boundary;

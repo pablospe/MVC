@@ -188,7 +188,6 @@ void Patch::computeInterior()
 				interior.push_back(Point(x,y));
 		}
 	}
-
 }
 
 bool Patch::interiorPoint(int x, int y)
@@ -197,13 +196,43 @@ bool Patch::interiorPoint(int x, int y)
 		return false;
 	else if (rows[x].size() == 1)
 		return (y == rows[x][0]);
-	else {
-		int intersection = 0;
+	else if (rows[x].size() == 2 && abs(rows[x][0] - rows[x][1]) <= 1)
+		return (y == rows[x][0] || y == rows[x][1]);
+	else
+		return checkRow(x,y,rows[x]);
+}
+
+bool Patch::checkRow(int x, int y, vector<int>& yBoundary)
+{
+	int intersection = 0;
+	vector<int> sub;
+
+	for (unsigned int i = 0; i < rows[x].size(); ++i) {
+		if (rows[x][i] > y) {
+			bool adjacent = false;
+
+			for (unsigned int j = 0; j < sub.size(); ++j)
+				if (abs(sub[j] - rows[x][i]) <= 1) {
+					adjacent = true;
+					break;
+				}
+			
+			sub.push_back(rows[x][i]);
+
+			if (!adjacent)
+				++intersection;
+		}
+	}
+	
+	if (intersection % 2 == 1) {
+		cout << "Her " ;
 		for (unsigned int i = 0; i < rows[x].size(); ++i)
 			if (rows[x][i] > y)
-				++intersection;
-		return (intersection % 2 == 1);
+				cout << rows[x][i] << " ";
+		cout << " " << intersection << endl;
 	}
+	
+	return (intersection % 2 == 1);
 }
 
 void Patch::color(Image* img)
