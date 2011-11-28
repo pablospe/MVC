@@ -223,6 +223,8 @@ void mouseClickSrc (int button, int state, int x, int y)
 			Point vertex(x,y);
 			if (lastPoint !=  vertex && srcPatch.addPoint(vertex)) {
 				cout << "Patch is closed" << endl;
+                
+                // Editing here
 				srcPatch.fillBoundary();
 				srcPatch.computeInterior();
 				srcPatch.color();
