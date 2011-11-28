@@ -202,6 +202,14 @@ bool Patch::interiorPoint(int x, int y)
 		return checkRow(x,y,rows[x]);
 }
 
+/***
+ Cases:
+    -empty
+    -all adjacent, in which case the point must be one of the boundary points
+    -not all adjacent, but we want to group adjacent ones as a single point,
+     which means ignoring rows already seen, and then requiring an 
+ ***/
+
 bool Patch::checkRow(int x, int y, vector<int>& yBoundary)
 {
 	int intersection = 0;
