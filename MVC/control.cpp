@@ -136,6 +136,8 @@ void menuFunc (int value)
 		break;
 
 	case M_SRC_CCLEAR:
+		contCloningSrc = false;
+		discreteCloningSrc = false;
 		srcPatch.clear();
 		break;
 	
@@ -250,7 +252,7 @@ void mouseClickDst (int button, int state, int x, int y)
 void motionSrc(int x, int y)
 {
 	cerr << "(" << x << ", " << y << ")" << endl;
-	if (currentSrcImage != NULL && currentSrcImage->good())
+	if (currentSrcImage != NULL && currentSrcImage->good() && contCloningSrc)
 		for (int chn = RED; chn <= BLUE; ++chn)
 			currentSrcImage->setPixel_(x,y,chn,1);
 	glutPostRedisplay();

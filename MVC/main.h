@@ -6,6 +6,12 @@
 #include "image.h"
 #include "patch.h"
 
+/***
+ To DO:
+ - create window class to contain all revelant
+   info (size, patch, image pointers, etc.)
+ ***/
+
 extern int windowWidthSrc;
 extern int windowHeightSrc;
 extern int windowWidthDst;

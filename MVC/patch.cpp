@@ -156,10 +156,15 @@ void Patch::highLight()
 
 void Patch::clear()
 {
+	for (unsigned int i = 0; i < boundary.size(); ++i) 
+		currImg->setPixel_(boundary[i].x,boundary[i].y,origImg->getPixel_(boundary[i].x,boundary[i].y));
+	for (unsigned int i = 0; i < interior.size(); ++i) 
+		currImg->setPixel_(interior[i].x,interior[i].y,origImg->getPixel_(interior[i].x,interior[i].y));
 	boundary.clear();
 	interior.clear();
 	rows.clear();
 	lowX=lowY=highX=highY=0;
+	glutPostRedisplay();
 }
 
 
