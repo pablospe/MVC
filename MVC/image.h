@@ -18,6 +18,10 @@ struct Point {
 	Point(int X, int Y): x(X), y(Y)
 	{
 	}
+	bool operator!=(const Point& p)
+	{
+		return (x == p.x && y == p.y); 
+	}
 };
 
 bool close(Point&, Point&);

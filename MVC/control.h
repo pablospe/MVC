@@ -14,6 +14,9 @@ void menuFunc (int value);
 void keyboardFunc (unsigned char key, int x, int y);
 void mouseClickSrc (int button, int state, int x, int y);
 void mouseClickDst (int button, int state, int x, int y);
+void motionSrc(int x, int y);
+
+void undoPoint();
 
 /***
 void mouse_move_func (int x, int y);

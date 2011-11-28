@@ -16,6 +16,7 @@ enum {
 	M_DST_REVERT = 8,
 
 	M_SRC_CLONE = 9,
+	M_SRC_CCLEAR = 10,
 
 	M_LAST_ENUM
 } MENU_ITEMS;
@@ -30,6 +31,7 @@ int makeMenuSrc ()
 
 	int clone = glutCreateMenu(menuFunc);
 	glutAddMenuEntry( "Outline Path", M_SRC_CLONE);
+	glutAddMenuEntry( "Clear Path", M_SRC_CCLEAR);
 
 	int main = glutCreateMenu(menuFunc);
 	glutAddSubMenu(   "File",		file);
@@ -132,6 +134,10 @@ void menuFunc (int value)
 	case M_SRC_CLONE:
 		initClone();
 		break;
+
+	case M_SRC_CCLEAR:
+		srcPatch.clear();
+		break;
 	
 	}
 
@@ -143,8 +149,11 @@ void initClone()
 	cout << "Begin selecting vertices of patch or tracing by holding down the left mouse. ";
 	cout << "The polygon must not intersect itself. ";
 	cout << "Close the patch by selecting a pixel close to the origin pixel" << endl;
+	cout << "Undo a point by pressing 'z'" << endl;
 
-	cloningSrc = true;
+	srcPatch.clear();
+	contCloningSrc = false;
+	discreteCloningSrc = true;
 }
 
 /***
@@ -187,26 +196,44 @@ void keyboardFunc (unsigned char key, int x, int y)
 		exit(0);
 		break;
 		;;
+
+	case 'z':
+		undoPoint();
+	}
+}
+
+void undoPoint()
+{
+	if (discreteCloningSrc) {
+		int xLast = srcPatch.boundary.back().x;
+		int yLast = srcPatch.boundary.back().y;
+		currentSrcImage->setPixel_(xLast,yLast,originalSrcImage->getPixel_(xLast,yLast));
+		srcPatch.boundary.pop_back();
+		cerr << "Removing point at: " << xLast << " " << yLast << endl;
+		glutPostRedisplay();
 	}
 }
 
 void mouseClickSrc (int button, int state, int x, int y)
 {
-	if (currentSrcImage && cloningSrc) {
+	if (currentSrcImage && discreteCloningSrc && !contCloningSrc) {
 
 		if (button == GLUT_DOWN) {
+			static Point lastPoint(0,0);
 			Point vertex(x,y);
-			if (srcPatch.addPoint(vertex)) {
+			if (lastPoint !=  vertex && srcPatch.addPoint(vertex)) {
 				cout << "Patch is closed" << endl;
 				srcPatch.fillBoundary();
 				srcPatch.computeInterior();
-				srcPatch.color(currentSrcImage);
-				cloningSrc = false;
+				srcPatch.color();
+				discreteCloningSrc = false;
 			}
 
 			else
 				for (int chn = RED; chn <= BLUE; ++chn)
 					currentSrcImage->setPixel_(x,y,chn, 0);
+
+			lastPoint = vertex;
 		}
 
 		glutPostRedisplay();
@@ -218,6 +245,15 @@ void mouseClickDst (int button, int state, int x, int y)
 	cerr << x << " " << y << endl;
 }
 
+void motionSrc(int x, int y)
+{
+	cerr << "(" << x << ", " << y << ")" << endl;
+	if (currentSrcImage != NULL && currentSrcImage->good())
+		for (int chn = RED; chn <= BLUE; ++chn)
+			currentSrcImage->setPixel_(x,y,chn,1);
+	glutPostRedisplay();
+}
+
 void menuHelp ()
 {
 	cerr << "not implemented yet" << endl;
@@ -227,8 +263,7 @@ void imageLoadSrc (const char* filename)
 {
 	imageLoad(filename, originalSrcImage, currentSrcImage, false);
 
-	srcPatch.img_width = originalSrcImage->getWidth();
-	srcPatch.img_height = originalSrcImage->getHeight();
+	srcPatch.init(originalSrcImage, currentSrcImage);
 }
 
 void imageLoadDst (const char* filename)

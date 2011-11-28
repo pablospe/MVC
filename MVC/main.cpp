@@ -17,7 +17,8 @@ Image* originalDstImage = NULL;
 Image* originalSrcImage = NULL;
 
 Patch srcPatch;
-bool cloningSrc = false;
+bool discreteCloningSrc = false;
+bool contCloningSrc = false;
 
 int windowSrc;
 int windowDst;
@@ -40,6 +41,7 @@ int main (int argc, char** argv)
 	makeMenuSrc();
 	glutKeyboardFunc(keyboardFunc);
 	glutMouseFunc(mouseClickSrc);
+	glutMotionFunc(motionSrc);
 	// END SOURCE WINDOW
 
 	// TARGET WINDOW

@@ -2,7 +2,8 @@
 #include "main.h"
 
 Patch::Patch()
-:	img_width(0), img_height(0),
+:	origImg(NULL),currImg(NULL),
+	img_width(0), img_height(0),
 	lowX(0), lowY(0), highX(0), highY(0)
 {
 	boundary.clear();
@@ -10,10 +11,12 @@ Patch::Patch()
 	rows.clear();
 }
 
-Patch::Patch(int width, int height)
-:	img_width(width), img_height(height),
-	lowX(0), lowY(0), highX(0), highY(0)
+void Patch::init(Image* imgOrig, Image* imgCurr)
 {
+	origImg = imgOrig ; currImg = imgCurr;
+	img_width = imgOrig->getWidth();
+	img_height = imgOrig->getHeight();
+	lowX = 0; lowY = 0; highX = 0; highY = 0;
 	boundary.clear();
 	interior.clear();
 	rows.clear();
@@ -143,11 +146,11 @@ void Patch::fillLine(Point pt1, Point pt2, vector<Point>& border)
 }
 
 
-void Patch::highLight(Image* img)
+void Patch::highLight()
 {
 	for (unsigned int i = 0; i < boundary.size(); ++i)
 		for (int chn = RED; chn <= BLUE; ++chn)
-			img->setPixel_(boundary[i].x,boundary[i].y,chn,1);
+			currImg->setPixel_(boundary[i].x,boundary[i].y,chn,1);
 }
 
 
@@ -223,7 +226,7 @@ bool Patch::checkRow(int x, int y, vector<int>& yBoundary)
 				++intersection;
 		}
 	}
-	
+	/***
 	if (intersection % 2 == 1) {
 		cout << "Her " ;
 		for (unsigned int i = 0; i < rows[x].size(); ++i)
@@ -231,13 +234,14 @@ bool Patch::checkRow(int x, int y, vector<int>& yBoundary)
 				cout << rows[x][i] << " ";
 		cout << " " << intersection << endl;
 	}
+	***/
 	
 	return (intersection % 2 == 1);
 }
 
-void Patch::color(Image* img)
+void Patch::color()
 {
 	for (unsigned int i = 0; i < interior.size(); ++i)
 		for (int chn = RED; chn <= BLUE; ++chn)
-			img->setPixel_(interior[i].x,interior[i].y,chn,1);
+			currImg->setPixel_(interior[i].x,interior[i].y,chn,1);
 }
