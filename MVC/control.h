@@ -17,6 +17,7 @@ void mouseClickDst (int button, int state, int x, int y);
 void motionSrc(int x, int y);
 
 void undoPoint();
+bool checkSource();
 
 /***
 void mouse_move_func (int x, int y);
@@ -38,6 +39,7 @@ void imageRevertSrc();
 void imageRevertDst();
 void imageRevert(Image*& orig, Image*& curr, int width, int height, bool dst);
 
-void initClone();
+void initDiscreteClone();
+void initContinuousClone();
 
 #endif // CONTROL_H

@@ -15,8 +15,9 @@ enum {
 	M_DST_INFO = 7,
 	M_DST_REVERT = 8,
 
-	M_SRC_CLONE = 9,
-	M_SRC_CCLEAR = 10,
+	M_SRC_CCLONE = 9,
+	M_SRC_CLEAR = 10,
+	M_SRC_DCLONE = 11,
 
 	M_LAST_ENUM
 } MENU_ITEMS;
@@ -30,8 +31,9 @@ int makeMenuSrc ()
 	glutAddMenuEntry( "Revert",		M_SRC_REVERT);
 
 	int clone = glutCreateMenu(menuFunc);
-	glutAddMenuEntry( "Outline Path", M_SRC_CLONE);
-	glutAddMenuEntry( "Clear Path", M_SRC_CCLEAR);
+	glutAddMenuEntry( "Outline Path", M_SRC_DCLONE);
+	glutAddMenuEntry( "Trace Path", M_SRC_CCLONE);
+	glutAddMenuEntry( "Clear Path", M_SRC_CLEAR);
 
 	int main = glutCreateMenu(menuFunc);
 	glutAddSubMenu(   "File",		file);
@@ -131,11 +133,15 @@ void menuFunc (int value)
 		break;
 
 	// Cloning
-	case M_SRC_CLONE:
-		initClone();
+	case M_SRC_DCLONE:
+		initDiscreteClone();
 		break;
 
-	case M_SRC_CCLEAR:
+	case M_SRC_CCLONE:
+		initContinuousClone();
+		break;
+
+	case M_SRC_CLEAR:
 		contCloningSrc = false;
 		discreteCloningSrc = false;
 		srcPatch.clear();
@@ -146,16 +152,38 @@ void menuFunc (int value)
 	return;
 }
 
-void initClone()
+bool checkSource()
 {
-	cout << "Begin selecting vertices of patch or tracing by holding down the left mouse. ";
+	return (originalSrcImage == NULL || currentSrcImage == NULL ||
+			originalSrcImage->bad()  || currentSrcImage->bad());
+}
+
+void initDiscreteClone()
+{
+	if (checkSource())
+		cerr << "No image!" << endl;
+
+	cout << "Select vertices of patch. ";
 	cout << "The polygon must not intersect itself. ";
-	cout << "Close the patch by selecting a pixel close to the origin pixel" << endl;
-	cout << "Undo a point by pressing 'z'" << endl;
+	cout << "Close the patch by selecting a pixel close to the original pixel or press 'c'. ";
+	cout << "Undo a point by pressing 'z'. " << endl;
 
 	srcPatch.clear();
-	contCloningSrc = false;
 	discreteCloningSrc = true;
+}
+
+void initContinuousClone()
+{
+	if (checkSource()) {
+		cerr << "No image!" << endl; return; 
+	}
+
+	cout << "Click and hold mouse to trace patch. ";
+	cout << "The polygon must not intersect itself. ";
+	cout << "Close the patch by tracing back to the origin pixel or press 'c'. " << endl;
+
+	srcPatch.clear();
+	contCloningSrc = true;
 }
 
 /***
@@ -221,12 +249,11 @@ void mouseClickSrc (int button, int state, int x, int y)
 	if (currentSrcImage && discreteCloningSrc && !contCloningSrc) {
 
 		if (button == GLUT_DOWN) {
-			static Point lastPoint(0,0);
+			static Point lastDPoint(0,0);
 			Point vertex(x,y);
-			if (lastPoint !=  vertex && srcPatch.addPoint(vertex)) {
+			if (lastDPoint !=  vertex && srcPatch.addPoint(vertex)) {
 				cout << "Patch is closed" << endl;
                 
-                // Editing here
 				srcPatch.fillBoundary();
 				srcPatch.computeInterior();
 				srcPatch.color();
@@ -237,7 +264,7 @@ void mouseClickSrc (int button, int state, int x, int y)
 				for (int chn = RED; chn <= BLUE; ++chn)
 					currentSrcImage->setPixel_(x,y,chn, 0);
 
-			lastPoint = vertex;
+			lastDPoint = vertex;
 		}
 
 		glutPostRedisplay();
@@ -251,11 +278,27 @@ void mouseClickDst (int button, int state, int x, int y)
 
 void motionSrc(int x, int y)
 {
-	cerr << "(" << x << ", " << y << ")" << endl;
-	if (currentSrcImage != NULL && currentSrcImage->good() && contCloningSrc)
-		for (int chn = RED; chn <= BLUE; ++chn)
-			currentSrcImage->setPixel_(x,y,chn,1);
-	glutPostRedisplay();
+	if (currentSrcImage != NULL && currentSrcImage->good() && contCloningSrc) {
+
+		static Point lastCPoint(0,0);
+		Point vertex(x,y);
+		cout << "Here" << endl;
+
+		if (srcPatch.addPoint(vertex)) {
+			cout << "Patch is closed" << endl;
+			srcPatch.fillBoundary();
+			srcPatch.computeInterior();
+			srcPatch.color();
+			contCloningSrc = false;
+		}
+
+		else
+			for (int chn = RED; chn <= BLUE; ++chn)
+				currentSrcImage->setPixel_(x,y,chn, 0);
+
+		lastCPoint = vertex;
+		glutPostRedisplay();
+	}
 }
 
 void menuHelp ()
