@@ -1,5 +1,6 @@
 #include "patch.h"
 #include "main.h"
+#include "window.h"
 
 Patch::Patch()
 :	origImg(NULL),currImg(NULL),

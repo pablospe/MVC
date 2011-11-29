@@ -1,5 +1,6 @@
 #include "control.h"
 #include "main.h"
+#include "window.h"
 #include <stdlib.h>
 
 enum {

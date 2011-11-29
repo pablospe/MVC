@@ -3,16 +3,17 @@
 
 #include "image.h"
 #include "patch.h"
+#include "common.h"
 
 class Window
 {
 public:
 
+	Patch pat;
 	// Data members
 	int height, width;
 	int glNum;
 
-	Patch patch;
 	Image* currentImg, originalImg;
 };
 

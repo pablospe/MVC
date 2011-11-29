@@ -1,16 +1,17 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-
 #include "common.h"
 #include "image.h"
 #include "patch.h"
+#include "window.h"
 
 /***
  To DO:
  - create window class to contain all revelant
    info (size, patch, image pointers, etc.)
  ***/
+
 
 extern int windowWidthSrc;
 extern int windowHeightSrc;
