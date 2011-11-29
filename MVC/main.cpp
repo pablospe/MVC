@@ -5,25 +5,8 @@
 #include <time.h>
 #include "control.h"
 
-int  windowWidthSrc  = 300;
-int  windowHeightSrc = 300;
-
-int windowWidthDst = 300;
-int windowHeightDst = 300;
-
-Image* currentSrcImage = NULL;
-Image* currentDstImage = NULL;
-Image* originalDstImage = NULL;
-Image* originalSrcImage = NULL;
-
-Patch srcPatch;
-bool discreteCloningSrc = false;
-bool contCloningSrc = false;
-bool pasteDst = false;
-
-int windowSrc;
-int windowDst;
-
+Window source;
+Window destination;
 
 int main (int argc, char** argv)
 {
@@ -33,8 +16,8 @@ int main (int argc, char** argv)
 
 	// SOURCE WINDOW
 	glutInitWindowPosition(100,400);
-	glutInitWindowSize(windowWidthSrc, windowHeightSrc);
-	windowSrc = glutCreateWindow("Source");
+	glutInitWindowSize(source.width, source.height);
+	source.glNum = glutCreateWindow("Source");
 	glutDisplayFunc(display);
 	glutReshapeFunc(unreshapeSrc);
 	glClearColor(0.0,0.0,0.0,0.0);
@@ -47,8 +30,8 @@ int main (int argc, char** argv)
 
 	// TARGET WINDOW
 	glutInitWindowPosition(500,400);
-	glutInitWindowSize(windowWidthSrc, windowHeightSrc);
-	windowDst = glutCreateWindow("Target");
+	glutInitWindowSize(destination.width, destination.height);
+	destination.glNum = glutCreateWindow("Target");
 	glutDisplayFunc(display);
 	glutReshapeFunc(unreshapeDst);
 	glClearColor(0.0,0.0,0.0,0.0);
@@ -75,22 +58,22 @@ void display ()
 
 	
 	// clear the frame buffer
-	glutSetWindow(windowSrc);
+	glutSetWindow(source.glNum);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	glutSetWindow(windowDst);
+	glutSetWindow(destination.glNum);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 
 	// draw the image
-	if (currentSrcImage) {
-		glutSetWindow(windowSrc);
-		currentSrcImage->glDrawPixelsWrapper();
+	if (source.currentImg) {
+		glutSetWindow(source.glNum);
+		source.currentImg->glDrawPixelsWrapper();
 	}
 
-	if (currentDstImage){ 
-		glutSetWindow(windowDst);
-		currentDstImage->glDrawPixelsWrapper();
+	if (destination.currentImg){ 
+		glutSetWindow(destination.glNum);
+		destination.currentImg->glDrawPixelsWrapper();
 	}
 
 	// swap buffers
@@ -98,19 +81,19 @@ void display ()
 
 
 	// swap buffers
-	glutSetWindow(windowSrc);
+	glutSetWindow(source.glNum);
 	glutSwapBuffers();
 }
 
 
 void unreshapeSrc (int width, int height)
 {
-	reshape(windowWidthSrc, windowHeightSrc, false);
+	reshape(source.width, source.height, false);
 }
 
 void unreshapeDst (int width, int height)
 {
-	reshape(windowWidthDst, windowHeightDst, true);
+	reshape(destination.width, destination.height, true);
 }
 
 void reshape (int width, int height, bool dst) 
@@ -118,13 +101,13 @@ void reshape (int width, int height, bool dst)
 	int window_height, window_width;
 
 	if (dst) {
-		window_height = windowHeightDst;
-		window_width = windowWidthDst;
+		window_height = destination.height;
+		window_width = destination.width;
 	}
 
 	else {
-		window_height = windowHeightSrc;
-		window_width = windowWidthSrc;
+		window_height = source.height;
+		window_width = source.width;
 	}
 
 
@@ -150,13 +133,13 @@ void reshape (int width, int height, bool dst)
 
 
 	if (dst) {
-		windowHeightDst = window_height;
-		windowWidthDst = window_width;
+		destination.height = window_height;
+		destination.width = window_width;
 	}
 
 	else {
-		windowHeightSrc = window_height;
-		windowWidthSrc = window_width;
+		source.height = window_height;
+		source.width = window_width;
 	}
 }
 

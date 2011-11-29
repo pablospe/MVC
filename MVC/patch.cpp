@@ -162,8 +162,8 @@ void Patch::clear()
 	interior.clear();
 	rows.clear();
 	lowX=lowY=highX=highY=0;
-	discreteCloningSrc = false;
-	contCloningSrc = false;
+	source.dClone = false;
+	source.cClone = false;
 	glutPostRedisplay();
 }
 
@@ -173,8 +173,8 @@ void Patch::closed()
 	fillBoundary();
 	computeInterior();
 	color();
-	contCloningSrc = false;
-	discreteCloningSrc = false;
+	source.cClone = false;
+	source.dClone = false;
 	glutPostRedisplay();
 }
 

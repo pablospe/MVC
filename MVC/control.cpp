@@ -111,7 +111,7 @@ void menuFunc (int value)
 		break;
 
 	case M_SRC_REVERT:
-		srcPatch.clear();
+		source.patch.clear();
 		imageRevertSrc();
 		break;
 
@@ -147,13 +147,13 @@ void menuFunc (int value)
 		break;
 
 	case M_SRC_CLEAR:
-		srcPatch.clear();
+		source.patch.clear();
 		break;
 
 	// Pasting
 
 	case M_DST_PASTE:
-		pasteDst = true;
+		destination.paste = true;
 		break;
 	
 	}
@@ -163,8 +163,8 @@ void menuFunc (int value)
 
 bool checkSource()
 {
-	return (originalSrcImage == NULL || currentSrcImage == NULL ||
-			originalSrcImage->bad()  || currentSrcImage->bad());
+	return (source.originalImg == NULL || source.currentImg == NULL ||
+			source.originalImg->bad()  || source.currentImg->bad());
 }
 
 void initDiscreteClone()
@@ -178,8 +178,8 @@ void initDiscreteClone()
 	cout << "Close the patch by selecting a pixel close to the original pixel or press 'c'. ";
 	cout << "Undo a point by pressing 'z'. \n" << endl;
 
-	srcPatch.clear();
-	discreteCloningSrc = true;
+	source.patch.clear();
+	source.dClone = true;
 }
 
 void initContinuousClone()
@@ -192,8 +192,8 @@ void initContinuousClone()
 	cout << "The polygon must not intersect itself. ";
 	cout << "Close the patch by tracing back to the origin pixel or press 'c'. \n" << endl;
 
-	srcPatch.clear();
-	contCloningSrc = true;
+	source.patch.clear();
+	source.cClone = true;
 }
 
 /***
@@ -242,7 +242,7 @@ void keyboardFunc (unsigned char key, int x, int y)
 		break;
 
 	case 'c':
-		srcPatch.closed();
+		source.patch.closed();
 		break;
 
 	}
@@ -250,11 +250,11 @@ void keyboardFunc (unsigned char key, int x, int y)
 
 void undoPoint()
 {
-	if (discreteCloningSrc) {
-		int xLast = srcPatch.boundary.back().x;
-		int yLast = srcPatch.boundary.back().y;
-		currentSrcImage->setPixel_(xLast,yLast,originalSrcImage->getPixel_(xLast,yLast));
-		srcPatch.boundary.pop_back();
+	if (source.dClone) {
+		int xLast = source.patch.boundary.back().x;
+		int yLast = source.patch.boundary.back().y;
+		source.currentImg->setPixel_(xLast,yLast,source.originalImg->getPixel_(xLast,yLast));
+		source.patch.boundary.pop_back();
 		cerr << "Removing point at: " << xLast << " " << yLast << endl;
 		glutPostRedisplay();
 	}
@@ -262,17 +262,17 @@ void undoPoint()
 
 void mouseClickSrc (int button, int state, int x, int y)
 {
-	if (currentSrcImage && discreteCloningSrc && !contCloningSrc) {
+	if (source.currentImg && source.dClone && !source.cClone) {
 
 		if (button == GLUT_DOWN) {
 			static Point lastDPoint(0,0);
 			Point vertex(x,y);
-			if (lastDPoint != vertex && srcPatch.addPoint(vertex))
-				srcPatch.closed();
+			if (lastDPoint != vertex && source.patch.addPoint(vertex))
+				source.patch.closed();
 
 			else
 				for (int chn = RED; chn <= BLUE; ++chn)
-					currentSrcImage->setPixel_(x,y,chn, 1);
+					source.currentImg->setPixel_(x,y,chn, 1);
 
 			lastDPoint = vertex;
 		}
@@ -285,7 +285,7 @@ void mouseClickDst (int button, int state, int x, int y)
 {
 	cerr << x << " " << y << endl;
 
-	if (pasteDst) {
+	if (destination.paste) {
 		// pasting code here!
 
 	}
@@ -293,19 +293,19 @@ void mouseClickDst (int button, int state, int x, int y)
 
 void motionSrc(int x, int y)
 {
-	if (currentSrcImage != NULL && currentSrcImage->good() && contCloningSrc) {
+	if (source.currentImg != NULL && source.currentImg->good() && source.cClone) {
 
 		static Point lastCPoint(0,0);
 		Point vertex(x,y);
 
-		if (vertex != lastCPoint && srcPatch.boundary.size() > 10 && srcPatch.addPoint(vertex))
-			srcPatch.closed();
+		if (vertex != lastCPoint && source.patch.boundary.size() > 10 && source.patch.addPoint(vertex))
+			source.patch.closed();
 
 		else if (vertex != lastCPoint)
-			srcPatch.addPoint(vertex);
+			source.patch.addPoint(vertex);
 
 		for (int chn = RED; chn <= BLUE; ++chn)
-			currentSrcImage->setPixel_(x,y,chn, 0);
+			source.currentImg->setPixel_(x,y,chn, 0);
 
 		lastCPoint = vertex;
 		glutPostRedisplay();
@@ -319,14 +319,14 @@ void menuHelp ()
 
 void imageLoadSrc (const char* filename)
 {
-	imageLoad(filename, originalSrcImage, currentSrcImage, false);
+	imageLoad(filename, source.originalImg, source.currentImg, false);
 
-	srcPatch.init(originalSrcImage, currentSrcImage);
+	source.patch.init(source.originalImg, source.currentImg);
 }
 
 void imageLoadDst (const char* filename)
 {
-	imageLoad(filename, originalDstImage, currentDstImage, true);
+	imageLoad(filename, destination.originalImg, destination.currentImg, true);
 }
 
 
@@ -362,17 +362,17 @@ void imageLoad (const char* filename, Image*& orig, Image*& curr, bool dst)
 
 void imageSave (const char* filename)
 {
-	if (currentDstImage)
+	if (destination.currentImg)
 	{
-		if (currentDstImage->write(filename) == 0)
+		if (destination.currentImg->write(filename) == 0)
 		{
 			//delete originalImage;
 			//originalImage = new Image(*currentImage);
 		}
 	}  
-	else if (originalDstImage)
+	else if (destination.originalImg)
 	{
-		originalDstImage->write(filename);
+		destination.originalImg->write(filename);
 	}
 	else
 	{
@@ -386,16 +386,16 @@ void imageSave (const char* filename)
 
 void imagePrint (bool dst)
 {  
-	if (currentSrcImage && !dst) {
-		cerr << "width:    " << currentSrcImage->getWidth() << endl
-			<< "height:   " << currentSrcImage->getHeight() << endl
-			<< "bits:     " << currentSrcImage->getBits() << endl;
+	if (source.currentImg && !dst) {
+		cerr << "width:    " << source.currentImg->getWidth() << endl
+			<< "height:   " << source.currentImg->getHeight() << endl
+			<< "bits:     " << source.currentImg->getBits() << endl;
 	}
 
-	else if (currentDstImage && dst) {
-		cerr << "width:    " << currentDstImage->getWidth() << endl
-			<< "height:   " << currentDstImage->getHeight() << endl
-			<< "bits:     " << currentDstImage->getBits() << endl;
+	else if (destination.currentImg && dst) {
+		cerr << "width:    " << destination.currentImg->getWidth() << endl
+			<< "height:   " << destination.currentImg->getHeight() << endl
+			<< "bits:     " << destination.currentImg->getBits() << endl;
 	}
 
 	cerr << "done!" << endl;
@@ -404,12 +404,12 @@ void imagePrint (bool dst)
 
 void imageRevertSrc()
 {
-	imageRevert(originalSrcImage, currentSrcImage, windowWidthSrc, windowHeightSrc, false);
+	imageRevert(source.originalImg, source.currentImg, source.height, source.height, false);
 }
 
 void imageRevertDst()
 {
-	imageRevert(originalDstImage, currentDstImage, windowWidthDst, windowHeightDst, true);
+	imageRevert(destination.originalImg, destination.currentImg, destination.width, destination.height, true);
 }
 
 void imageRevert (Image*& orig, Image*& curr, int width, int height, bool dst)

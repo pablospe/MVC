@@ -8,13 +8,16 @@
 class Window
 {
 public:
+	Window();
 
-	Patch pat;
 	// Data members
+	Patch patch;
 	int height, width;
 	int glNum;
+	bool dClone, cClone, paste;
 
-	Image* currentImg, originalImg;
+	Image* currentImg;
+	Image* originalImg;
 };
 
 #endif

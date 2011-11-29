@@ -6,28 +6,8 @@
 #include "patch.h"
 #include "window.h"
 
-/***
- To DO:
- - create window class to contain all revelant
-   info (size, patch, image pointers, etc.)
- ***/
-
-
-extern int windowWidthSrc;
-extern int windowHeightSrc;
-extern int windowWidthDst;
-extern int windowHeightDst;
-
-extern Image* currentSrcImage;
-extern Image* originalSrcImage;
-
-extern Image* currentDstImage;
-extern Image* originalDstImage;
-
-extern Patch srcPatch;
-extern bool discreteCloningSrc;
-extern bool contCloningSrc;
-extern bool pasteDst;
+extern Window source;
+extern Window destination;
 
 int  main (int argc, char** argv);
 void display();
