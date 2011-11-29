@@ -26,6 +26,7 @@ extern Image* originalDstImage;
 extern Patch srcPatch;
 extern bool discreteCloningSrc;
 extern bool contCloningSrc;
+extern bool pasteDst;
 
 int  main (int argc, char** argv);
 void display();

@@ -19,6 +19,8 @@ enum {
 	M_SRC_CLEAR = 10,
 	M_SRC_DCLONE = 11,
 
+	M_DST_PASTE = 12,
+
 	M_LAST_ENUM
 } MENU_ITEMS;
 
@@ -53,6 +55,9 @@ int makeMenuDst ()
 	glutAddMenuEntry( "Save...",		M_DST_SAVE);
 	glutAddMenuEntry( "Get Image Info",		M_DST_INFO);
 	glutAddMenuEntry( "Revert",		M_DST_REVERT);
+
+	int clone = glutCreateMenu(menuFunc);
+	glutAddMenuEntry( "Paste Patch", M_DST_PASTE);
 
 	int main = glutCreateMenu(menuFunc);
 	glutAddSubMenu(   "File",		file);
@@ -141,6 +146,12 @@ void menuFunc (int value)
 
 	case M_SRC_CLEAR:
 		srcPatch.clear();
+		break;
+
+	// Pasting
+
+	case M_DST_PASTE:
+		pasteDst = true;
 		break;
 	
 	}
@@ -271,6 +282,11 @@ void mouseClickSrc (int button, int state, int x, int y)
 void mouseClickDst (int button, int state, int x, int y)
 {
 	cerr << x << " " << y << endl;
+
+	if (pasteDst) {
+		// pasting code here!
+
+	}
 }
 
 void motionSrc(int x, int y)

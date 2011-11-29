@@ -20,7 +20,6 @@ void undoPoint();
 bool checkSource();
 
 /***
-void mouse_move_func (int x, int y);
 void idle_func ();
 void process_func (int value);
 ***/

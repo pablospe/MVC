@@ -19,6 +19,7 @@ Image* originalSrcImage = NULL;
 Patch srcPatch;
 bool discreteCloningSrc = false;
 bool contCloningSrc = false;
+bool pasteDst = false;
 
 int windowSrc;
 int windowDst;
