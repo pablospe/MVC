@@ -61,6 +61,7 @@ int makeMenuDst ()
 
 	int main = glutCreateMenu(menuFunc);
 	glutAddSubMenu(   "File",		file);
+	glutAddSubMenu(   "Clone",		clone);
 	glutAddMenuEntry( "Help",		M_HELP);
 	glutAddMenuEntry( "Quit",		M_QUIT);
 
