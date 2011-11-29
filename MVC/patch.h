@@ -3,6 +3,7 @@
 
 #include "image.h"
 #include "common.h"
+#include "control.h"
 #include <algorithm>
 
 

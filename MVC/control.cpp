@@ -87,12 +87,10 @@ void menuFunc (int value)
 		break;
 		;;
 
-
 	case M_HELP:
 		menuHelp();
 		break;
 		;;
-
 
 	case M_SRC_OPEN:   // enum #2
 		cerr << "Open file (string - no spaces) : ";
@@ -142,8 +140,6 @@ void menuFunc (int value)
 		break;
 
 	case M_SRC_CLEAR:
-		contCloningSrc = false;
-		discreteCloningSrc = false;
 		srcPatch.clear();
 		break;
 	
@@ -263,7 +259,7 @@ void mouseClickSrc (int button, int state, int x, int y)
 
 			else
 				for (int chn = RED; chn <= BLUE; ++chn)
-					currentSrcImage->setPixel_(x,y,chn, 0);
+					currentSrcImage->setPixel_(x,y,chn, 1);
 
 			lastDPoint = vertex;
 		}

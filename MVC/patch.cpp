@@ -156,10 +156,7 @@ void Patch::highLight()
 
 void Patch::clear()
 {
-	for (unsigned int i = 0; i < boundary.size(); ++i) 
-		currImg->setPixel_(boundary[i].x,boundary[i].y,origImg->getPixel_(boundary[i].x,boundary[i].y));
-	for (unsigned int i = 0; i < interior.size(); ++i) 
-		currImg->setPixel_(interior[i].x,interior[i].y,origImg->getPixel_(interior[i].x,interior[i].y));
+	imageRevertSrc();
 	boundary.clear();
 	interior.clear();
 	rows.clear();
@@ -167,7 +164,6 @@ void Patch::clear()
 	discreteCloningSrc = false;
 	contCloningSrc = false;
 	glutPostRedisplay();
-
 }
 
 void Patch::closed()
@@ -205,34 +201,26 @@ void Patch::computeInterior()
 	interior.reserve(pow(double(boundary.size()),2));
 
 	for (int x = lowX; x <= highX; ++x) {
-		for (int y = lowY; y < highY; ++y) {
+		for (int y = lowY; y <= highY; ++y) {
 			if (interiorPoint(x,y))
 				interior.push_back(Point(x,y));
+			else
+				currImg->setPixel_(x,y,Pixel());
 		}
 	}
+	for (int x = 0; x < img_width; ++x)
+		for (int y = 0; y < img_height; ++y)
+			if (x < lowX || x > highX || y < lowY || y > highY)
+				currImg->setPixel_(x,y,Pixel());
 }
 
 bool Patch::interiorPoint(int x, int y)
 {
 	if (rows.count(x) == 0)
 		return false;
-	/***
-	else if (rows[x].size() == 1)
-		return (y == rows[x][0]);
-	else if (rows[x].size() == 2 && abs(rows[x][0] - rows[x][1]) <= 1)
-		return (y == rows[x][0] || y == rows[x][1]);
-	***/
 	else
 		return checkRow(x,y,rows[x]);
 }
-
-/***
- Cases:
-    -empty
-    -all adjacent, in which case the point must be one of the boundary points
-    -not all adjacent, but we want to group adjacent ones as a single point,
-     which means ignoring rows already seen, and then requiring an 
- ***/
 
 bool Patch::checkAdjaceny(int x, int y, vector<int>& yBoundary)
 {
@@ -250,7 +238,6 @@ bool Patch::checkAdjaceny(int x, int y, vector<int>& yBoundary)
 bool Patch::checkRow(int x, int y, vector<int>& yBoundary)
 {
 	if (checkAdjaceny(x,y,yBoundary)) {
-		cout << "Adjacent " << x << endl;
 		for (unsigned int i = 0; i < yBoundary.size(); ++i)
 			if (y == yBoundary[i])
 				return true;
@@ -276,22 +263,15 @@ bool Patch::checkRow(int x, int y, vector<int>& yBoundary)
 				++intersection;
 		}
 	}
-	/***
-	if (intersection % 2 == 1) {
-		cout << "Her " ;
-		for (unsigned int i = 0; i < rows[x].size(); ++i)
-			if (rows[x][i] > y)
-				cout << rows[x][i] << " ";
-		cout << " " << intersection << endl;
-	}
-	***/
 	
 	return (intersection % 2 == 1);
 }
 
 void Patch::color()
 {
+	/***
 	for (unsigned int i = 0; i < interior.size(); ++i)
 		for (int chn = RED; chn <= BLUE; ++chn)
 			currImg->setPixel_(interior[i].x,interior[i].y,chn,1);
+	***/
 }
