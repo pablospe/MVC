@@ -216,10 +216,12 @@ bool Patch::interiorPoint(int x, int y)
 {
 	if (rows.count(x) == 0)
 		return false;
+	/***
 	else if (rows[x].size() == 1)
 		return (y == rows[x][0]);
 	else if (rows[x].size() == 2 && abs(rows[x][0] - rows[x][1]) <= 1)
 		return (y == rows[x][0] || y == rows[x][1]);
+	***/
 	else
 		return checkRow(x,y,rows[x]);
 }
@@ -232,8 +234,29 @@ bool Patch::interiorPoint(int x, int y)
      which means ignoring rows already seen, and then requiring an 
  ***/
 
+bool Patch::checkAdjaceny(int x, int y, vector<int>& yBoundary)
+{
+	sort(yBoundary.begin(),yBoundary.end());
+
+	bool adj = true;
+	for (unsigned int i = 0; i < yBoundary.size() - 1; ++i)
+		if (yBoundary[i] + 1 != yBoundary[i+1] && yBoundary[i] != yBoundary[i+1])
+			adj = false;
+
+	return adj;
+}
+
+
 bool Patch::checkRow(int x, int y, vector<int>& yBoundary)
 {
+	if (checkAdjaceny(x,y,yBoundary)) {
+		cout << "Adjacent " << x << endl;
+		for (unsigned int i = 0; i < yBoundary.size(); ++i)
+			if (y == yBoundary[i])
+				return true;
+		return false;
+	}
+
 	int intersection = 0;
 	vector<int> sub;
 

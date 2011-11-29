@@ -3,6 +3,7 @@
 
 #include "image.h"
 #include "common.h"
+#include <algorithm>
 
 
 class Patch
@@ -14,6 +15,7 @@ public:
 	bool addPoint(Point& vertex);
 	bool interiorPoint(int x, int y);
 	bool checkRow(int x,int y, vector<int>& yBoundary);
+	bool checkAdjaceny(int x, int y, vector<int>& yBoundary);
 
 	void computeRows();
 	void computeInterior();
