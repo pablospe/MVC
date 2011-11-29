@@ -164,6 +164,20 @@ void Patch::clear()
 	interior.clear();
 	rows.clear();
 	lowX=lowY=highX=highY=0;
+	discreteCloningSrc = false;
+	contCloningSrc = false;
+	glutPostRedisplay();
+
+}
+
+void Patch::closed()
+{
+	cout << "Patch is closed" << endl;
+	fillBoundary();
+	computeInterior();
+	color();
+	contCloningSrc = false;
+	discreteCloningSrc = false;
 	glutPostRedisplay();
 }
 

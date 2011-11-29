@@ -160,13 +160,14 @@ bool checkSource()
 
 void initDiscreteClone()
 {
-	if (checkSource())
-		cerr << "No image!" << endl;
+	if (checkSource()) {
+		cerr << "No image!" << endl; return;
+	}
 
 	cout << "Select vertices of patch. ";
 	cout << "The polygon must not intersect itself. ";
 	cout << "Close the patch by selecting a pixel close to the original pixel or press 'c'. ";
-	cout << "Undo a point by pressing 'z'. " << endl;
+	cout << "Undo a point by pressing 'z'. \n" << endl;
 
 	srcPatch.clear();
 	discreteCloningSrc = true;
@@ -180,7 +181,7 @@ void initContinuousClone()
 
 	cout << "Click and hold mouse to trace patch. ";
 	cout << "The polygon must not intersect itself. ";
-	cout << "Close the patch by tracing back to the origin pixel or press 'c'. " << endl;
+	cout << "Close the patch by tracing back to the origin pixel or press 'c'. \n" << endl;
 
 	srcPatch.clear();
 	contCloningSrc = true;
@@ -229,6 +230,12 @@ void keyboardFunc (unsigned char key, int x, int y)
 
 	case 'z':
 		undoPoint();
+		break;
+
+	case 'c':
+		srcPatch.closed();
+		break;
+
 	}
 }
 
@@ -251,14 +258,8 @@ void mouseClickSrc (int button, int state, int x, int y)
 		if (button == GLUT_DOWN) {
 			static Point lastDPoint(0,0);
 			Point vertex(x,y);
-			if (lastDPoint !=  vertex && srcPatch.addPoint(vertex)) {
-				cout << "Patch is closed" << endl;
-                
-				srcPatch.fillBoundary();
-				srcPatch.computeInterior();
-				srcPatch.color();
-				discreteCloningSrc = false;
-			}
+			if (lastDPoint != vertex && srcPatch.addPoint(vertex))
+				srcPatch.closed();
 
 			else
 				for (int chn = RED; chn <= BLUE; ++chn)
@@ -282,19 +283,15 @@ void motionSrc(int x, int y)
 
 		static Point lastCPoint(0,0);
 		Point vertex(x,y);
-		cout << "Here" << endl;
 
-		if (srcPatch.addPoint(vertex)) {
-			cout << "Patch is closed" << endl;
-			srcPatch.fillBoundary();
-			srcPatch.computeInterior();
-			srcPatch.color();
-			contCloningSrc = false;
-		}
+		if (vertex != lastCPoint && srcPatch.boundary.size() > 10 && srcPatch.addPoint(vertex))
+			srcPatch.closed();
 
-		else
-			for (int chn = RED; chn <= BLUE; ++chn)
-				currentSrcImage->setPixel_(x,y,chn, 0);
+		else if (vertex != lastCPoint)
+			srcPatch.addPoint(vertex);
+
+		for (int chn = RED; chn <= BLUE; ++chn)
+			currentSrcImage->setPixel_(x,y,chn, 0);
 
 		lastCPoint = vertex;
 		glutPostRedisplay();

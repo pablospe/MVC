@@ -23,6 +23,7 @@ public:
 	void highLight();
 	void color();
 	void clear();
+	void closed();
 
 	// members
 	Image* origImg;

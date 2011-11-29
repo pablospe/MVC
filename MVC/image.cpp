@@ -24,8 +24,8 @@ static inline unsigned char val2bits (double v, int b)
 
 bool close(Point& pt1, Point& pt2)
 {
-	return (abs(pt1.x - pt2.x) <= 3 &&
-			abs(pt1.y - pt2.y) <= 3);
+	return (abs(pt1.x - pt2.x) <= 2 &&
+			abs(pt1.y - pt2.y) <= 2);
 }
 
 Pixel::Pixel()
