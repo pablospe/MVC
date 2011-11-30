@@ -291,11 +291,9 @@ void mouseClickSrc (int button, int state, int x, int y)
 
 void mouseClickDst (int button, int state, int x, int y)
 {
-	cerr << x << " " << y << endl;
-
 	if (destination.paste) {
-		// pasting code here!
-
+		composite(Point(x,y));
+		destination.paste = false;
 	}
 }
 

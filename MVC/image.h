@@ -43,10 +43,16 @@ public:
 	~Pixel ();
 	double getColor(int chan);
 	void setColor(int chan, double value);
-
+	friend Pixel operator-(Pixel&,Pixel&);
+	friend Pixel operator+(Pixel&, Pixel&);
+	friend Pixel scale(Pixel, double);
 private:
 	double		col[3];
 };
+
+Pixel operator-(Pixel& left, Pixel& right);
+Pixel operator+(Pixel& left, Pixel& right);
+Pixel scale(Pixel, double weight);
 
 ostream &operator<<(ostream &out_file, Pixel& thePixel);
 

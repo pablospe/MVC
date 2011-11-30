@@ -81,6 +81,29 @@ void Pixel::setColor(int chan, double val)
 	col[chan]=val;
 }
 
+Pixel scale(Pixel p, double weight)
+{
+	for (int chn = RED; chn <= BLUE; ++chn)
+		p.col[chn] = p.col[chn] * weight;
+	return p;
+}
+
+Pixel operator+(Pixel& left, Pixel& right)
+{
+	Pixel result;
+	for (int chn = RED; chn <= BLUE; ++chn)
+		result.col[chn] = left.col[chn] + right.col[chn];
+	return result;
+}
+
+Pixel operator-(Pixel& left, Pixel& right)
+{
+	Pixel result;
+	for (int chn = RED; chn <= BLUE; ++chn)
+		result.col[chn] = left.col[chn] - right.col[chn];
+	return result;
+}
+
 // write
 ostream &operator<<(ostream &out_file, Pixel& thePixel)
 {
