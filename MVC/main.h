@@ -6,6 +6,7 @@
 #include "image.h"
 #include "patch.h"
 #include "geometry.h"
+#include "mvc.h"
 
 
 extern Window source;
