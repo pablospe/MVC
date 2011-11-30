@@ -1,6 +1,5 @@
 #include "control.h"
 #include "main.h"
-#include "window.h"
 #include <stdlib.h>
 
 enum {
@@ -8,19 +7,20 @@ enum {
 	M_HELP = 1,
 
 	M_SRC_OPEN = 2,
-	M_SRC_INFO = 3,
-	M_SRC_REVERT = 4,
+	M_SRC_SAVE = 3,
+	M_SRC_INFO = 4,
+	M_SRC_REVERT = 5,
 
-	M_DST_OPEN = 5,
-	M_DST_SAVE = 6,
-	M_DST_INFO = 7,
-	M_DST_REVERT = 8,
+	M_DST_OPEN = 6,
+	M_DST_SAVE = 7,
+	M_DST_INFO = 8,
+	M_DST_REVERT = 9,
 
-	M_SRC_CCLONE = 9,
-	M_SRC_CLEAR = 10,
-	M_SRC_DCLONE = 11,
+	M_SRC_CCLONE = 10,
+	M_SRC_CLEAR = 11,
+	M_SRC_DCLONE = 12,
 
-	M_DST_PASTE = 12,
+	M_DST_PASTE = 13,
 
 	M_LAST_ENUM
 } MENU_ITEMS;
@@ -30,6 +30,7 @@ int makeMenuSrc ()
 {
 	int file = glutCreateMenu(menuFunc);
 	glutAddMenuEntry( "Open...",		M_SRC_OPEN);
+	glutAddMenuEntry( "Save...",		M_SRC_SAVE);
 	glutAddMenuEntry( "Get Source Image Info",		M_SRC_INFO);
 	glutAddMenuEntry( "Revert",		M_SRC_REVERT);
 
@@ -103,38 +104,45 @@ void menuFunc (int value)
 		cerr << "Open file (string - no spaces) : ";
 		cin  >> filename;
 		checkStream(cin);
-		imageLoadSrc(filename);
+		imageLoad(filename, source);
+		break;
+
+	case M_SRC_SAVE:   // enum #3
+		cerr << "Save as (string - no spaces) : ";
+		cin  >> filename;
+		checkStream(cin);
+		imageSave(filename, source);
 		break;
 
 	case M_SRC_INFO:
-		imagePrint(false);
+		imagePrint(source);
 		break;
 
 	case M_SRC_REVERT:
 		source.patch.clear();
-		imageRevertSrc();
+		imageRevert(source);
 		break;
 
 	case M_DST_OPEN:   // enum #2
 		cerr << "Open file (string - no spaces) : ";
 		cin  >> filename;
 		checkStream(cin);
-		imageLoadDst(filename);
+		imageLoad(filename, destination);
 		break;
 
 	case M_DST_SAVE:   // enum #3
 		cerr << "Save as (string - no spaces) : ";
 		cin  >> filename;
 		checkStream(cin);
-		imageSave(filename);
+		imageSave(filename, destination);
 		break;
 
 	case M_DST_INFO:
-		imagePrint(true);
+		imagePrint(destination);
 		break;
 
 	case M_DST_REVERT:
-		imageRevertDst();
+		imageRevert(destination);
 		break;
 
 	// Cloning
@@ -317,40 +325,30 @@ void menuHelp ()
 	cerr << "not implemented yet" << endl;
 }
 
-void imageLoadSrc (const char* filename)
+
+void imageLoad (const char* filename, Window& w)
 {
-	imageLoad(filename, source.originalImg, source.currentImg, false);
+	if (w.currentImg)
+		delete w.currentImg;
+	if (w.originalImg)
+		delete w.originalImg;
 
-	source.patch.init(source.originalImg, source.currentImg);
-}
+	w.currentImg = NULL;
+	w.originalImg = NULL;
 
-void imageLoadDst (const char* filename)
-{
-	imageLoad(filename, destination.originalImg, destination.currentImg, true);
-}
+	w.originalImg = new Image();
+	w.originalImg->read(filename);
 
-
-void imageLoad (const char* filename, Image*& orig, Image*& curr, bool dst)
-{
-	if (curr)
-		delete curr;
-	if (orig)
-		delete orig;
-	curr = NULL;
-	orig = NULL;
-
-	orig = new Image();
-	orig->read(filename);
-
-	if (orig->good())
+	if (w.originalImg->good())
 	{  
-		curr = new Image(*orig);
-		reshape(curr->getWidth(), curr->getHeight(), dst);
+		w.currentImg = new Image(*w.originalImg);
+		w.update();
+		reshape(w);
 	}
 	else
 	{
-		delete orig;  
-		orig = NULL;
+		delete w.originalImg;  
+		w.originalImg = NULL;
 		cerr << "Couldn't load image " << filename << "!" << endl;
 		return;
 	}
@@ -360,19 +358,19 @@ void imageLoad (const char* filename, Image*& orig, Image*& curr, bool dst)
 }  
 
 
-void imageSave (const char* filename)
+void imageSave (const char* filename, Window& w)
 {
-	if (destination.currentImg)
+	if (w.currentImg)
 	{
-		if (destination.currentImg->write(filename) == 0)
+		if (w.currentImg->write(filename) == 0)
 		{
 			//delete originalImage;
 			//originalImage = new Image(*currentImage);
 		}
 	}  
-	else if (destination.originalImg)
+	else if (w.originalImg)
 	{
-		destination.originalImg->write(filename);
+		w.originalImg->write(filename);
 	}
 	else
 	{
@@ -384,47 +382,36 @@ void imageSave (const char* filename)
 }
 
 
-void imagePrint (bool dst)
+void imagePrint (Window& w)
 {  
-	if (source.currentImg && !dst) {
-		cerr << "width:    " << source.currentImg->getWidth() << endl
-			<< "height:   " << source.currentImg->getHeight() << endl
-			<< "bits:     " << source.currentImg->getBits() << endl;
+	if (w.currentImg) {
+		// Note its possible the image size is not equal to the window
+		// size if one dimension is smaller than 64)
+		cerr << "width:    " << w.currentImg->getWidth() << endl
+			 << "height:   " << w.currentImg->getHeight() << endl
+			 << "bits:     " << w.currentImg->getBits() << endl;
 	}
 
-	else if (destination.currentImg && dst) {
-		cerr << "width:    " << destination.currentImg->getWidth() << endl
-			<< "height:   " << destination.currentImg->getHeight() << endl
-			<< "bits:     " << destination.currentImg->getBits() << endl;
-	}
+	else
+		cerr << "No image!" << endl;
 
 	cerr << "done!" << endl;
 }
 
-
-void imageRevertSrc()
-{
-	imageRevert(source.originalImg, source.currentImg, source.height, source.height, false);
-}
-
-void imageRevertDst()
-{
-	imageRevert(destination.originalImg, destination.currentImg, destination.width, destination.height, true);
-}
-
-void imageRevert (Image*& orig, Image*& curr, int width, int height, bool dst)
+void imageRevert (Window& w)
 {
 	
-	if (curr)
-		delete curr;
+	if (w.currentImg)
+		delete w.currentImg;
 
-	if (orig)
+	if (w.originalImg)
 	{
-		curr = new Image(*orig);
+		w.currentImg = new Image(*w.originalImg);
 
-		if (width  != curr->getWidth() ||
-			height != curr->getHeight())
-			reshape(curr->getWidth(), curr->getHeight(), dst);
+		if (w.width  != w.currentImg->getWidth() || w.height != w.currentImg->getHeight()) {
+			w.update();		
+			reshape(w);
+		}
 	}
 	else
 	{

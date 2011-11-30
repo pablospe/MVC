@@ -1,6 +1,6 @@
 #include "patch.h"
 #include "main.h"
-#include "window.h"
+#include "control.h"
 
 Patch::Patch()
 :	origImg(NULL),currImg(NULL),
@@ -157,7 +157,7 @@ void Patch::highLight()
 
 void Patch::clear()
 {
-	imageRevertSrc();
+	imageRevert(source);
 	boundary.clear();
 	interior.clear();
 	rows.clear();
@@ -275,4 +275,25 @@ void Patch::color()
 		for (int chn = RED; chn <= BLUE; ++chn)
 			currImg->setPixel_(interior[i].x,interior[i].y,chn,1);
 	***/
+}
+
+Window::Window()
+:	height(300),width(300),glNum(0),
+	dClone(false),cClone(false),paste(false),
+	currentImg(NULL), originalImg(NULL)
+{
+	//Nothing to do
+}
+
+void Window::update()
+{
+	height = currentImg->getHeight();
+	width = currentImg->getWidth();
+
+	patch.currImg = currentImg;
+	patch.origImg = originalImg;
+	patch.img_height = height;
+	patch.img_width = width;
+
+
 }

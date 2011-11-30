@@ -3,12 +3,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
-#include "control.h"
 
 Window source;
 Window destination;
 
-int main (int argc, char** argv)
+int main(int argc, char** argv)
 {
 	// set up the window
 	glutInit(&argc, &argv[0]); 
@@ -46,7 +45,7 @@ int main (int argc, char** argv)
 }
 
 
-void display ()
+void display()
 {
 	// check if there have been any openGL problems
 	GLenum errCode = glGetError();
@@ -86,34 +85,23 @@ void display ()
 }
 
 
-void unreshapeSrc (int width, int height)
+void unreshapeSrc(int width, int height)
 {
-	reshape(source.width, source.height, false);
+	reshape(source);
 }
 
-void unreshapeDst (int width, int height)
+void unreshapeDst(int width, int height)
 {
-	reshape(destination.width, destination.height, true);
+	reshape(destination);
 }
 
-void reshape (int width, int height, bool dst) 
+void reshape(Window& w) 
 {
 	int window_height, window_width;
 
-	if (dst) {
-		window_height = destination.height;
-		window_width = destination.width;
-	}
-
-	else {
-		window_height = source.height;
-		window_width = source.width;
-	}
-
-
 	// set window height and width
-	window_width  = max(width,  64);
-	window_height = max(height, 64); 
+	window_width  = max(w.width,  64);
+	window_height = max(w.height, 64); 
 
 	// change the actual window's size
 	glutReshapeWindow(window_width, window_height);
@@ -131,15 +119,7 @@ void reshape (int width, int height, bool dst)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-
-	if (dst) {
-		destination.height = window_height;
-		destination.width = window_width;
-	}
-
-	else {
-		source.height = window_height;
-		source.width = window_width;
-	}
+	w.height = window_height;
+	w.width = window_width;
 }
 

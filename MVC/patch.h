@@ -3,7 +3,6 @@
 
 #include "image.h"
 #include "common.h"
-#include "control.h"
 #include <algorithm>
 
 
@@ -36,6 +35,22 @@ public:
 	vector<Point> interior;
 	vector<Point> boundary;
 	map<int, std::vector<int> > rows;
+};
+
+class Window
+{
+public:
+	Window();
+	void update();
+
+	// Data members
+	Patch patch;
+	int height, width;
+	int glNum;
+	bool dClone, cClone, paste;
+
+	Image* currentImg;
+	Image* originalImg;
 };
 
 #endif
