@@ -21,5 +21,5 @@ double angle(Point ref, Point a, Point b)
 	double sizeA = size(refToA);
 	double sizeB = size(refToB);
 
-	return acos(dot / (sizeA * sizeB) );
+	return acos(dot / ((sizeA * sizeB) + EPSILON) );
 }
