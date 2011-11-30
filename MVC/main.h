@@ -5,6 +5,7 @@
 #include "common.h"
 #include "image.h"
 #include "patch.h"
+#include "geometry.h"
 
 
 extern Window source;
