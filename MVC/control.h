@@ -3,7 +3,7 @@
 
 #include "common.h"
 #include "image.h"
-
+#include "patch.h"
 
 
 // init calls
@@ -28,16 +28,10 @@ void process_func (int value);
 // menu calls
 void menuHelp ();
 
-void imageLoadSrc(const char* filename);
-void imageLoadDst(const char* filename);
-void imageLoad(const char* filename, Image*& orig, Image*& curr, bool dst);
-
-void imageSave(const char* filename);
-void imagePrint(bool dst);
-
-void imageRevertSrc();
-void imageRevertDst();
-void imageRevert(Image*& orig, Image*& curr, int width, int height, bool dst);
+void imageLoad(const char* filename, Window& w);
+void imageSave(const char* filename, Window& w);
+void imagePrint(Window& w);
+void imageRevert(Window& w);
 
 void initDiscreteClone();
 void initContinuousClone();
