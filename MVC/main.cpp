@@ -40,6 +40,9 @@ int main(int argc, char** argv)
 	glutMouseFunc(mouseClickDst);
 	// END TARGET WINDOW
 
+	imageLoad("../cat.bmp", source);
+	imageLoad("../test.bmp", destination);
+
 	// wait for something to happen
 	glutMainLoop();
 }

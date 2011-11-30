@@ -13,13 +13,18 @@ double size(Point pt)
 double angle(Point ref, Point a, Point b)
 {
 	// Create two vectors
-	Point refToA(a.x-ref.x,a.y-ref.y);
-	Point refToB(b.x-ref.x,b.y-ref.y);
+	Point refToA(a.x - ref.x, a.y - ref.y);
+	Point refToB(b.x - ref.x, b.y - ref.y);
 
 	// Find angle between them
 	double dot = refToA.x * refToB.x + refToA.y * refToB.y;
 	double sizeA = size(refToA);
 	double sizeB = size(refToB);
 
-	return acos(dot / ((sizeA * sizeB) + EPSILON) );
+	if (sizeA == 0 || sizeB == 0)
+		return 0;
+
+	cout << "acos arg: " << dot / (sizeA * sizeB) << endl;
+
+	return acos(dot / (sizeA * sizeB) );
 }
