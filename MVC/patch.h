@@ -17,6 +17,7 @@ public:
 	bool checkRow(int x,int y, vector<int>& yBoundary);
 	bool checkAdjaceny(int x, int y, vector<int>& yBoundary);
 
+	void addPointHelper(Point& vertex);
 	void computeRows();
 	void computeInterior();
 	void fillBoundary();

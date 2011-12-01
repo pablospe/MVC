@@ -398,7 +398,7 @@ void imagePrint (Window& w)
 
 void imageRevert (Window& w)
 {
-	
+	w.patch.clear();
 	if (w.currentImg)
 		delete w.currentImg;
 

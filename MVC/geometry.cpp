@@ -24,7 +24,7 @@ double angle(Point ref, Point a, Point b)
 	if (sizeA == 0 || sizeB == 0)
 		return 0;
 
-	cout << "acos arg: " << dot / (sizeA * sizeB) << endl;
+	//cout << "acos arg: " << dot / (sizeA * sizeB) << " for points: " << ref.x << " " << ref.y <<  " " << a.x << " " << a.y << " " << b.x << " " << b.y << endl;
 
 	return acos(dot / (sizeA * sizeB) );
 }

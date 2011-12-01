@@ -23,58 +23,58 @@ void Patch::init(Image* imgOrig, Image* imgCurr)
 	rows.clear();
 }
 
+void Patch::addPointHelper(Point& vertex)
+{
+	cerr << "Adding vertex at: " << vertex.x << " " << vertex.y << endl;
+	boundary.push_back(vertex);
+
+	if (boundary.size() == 1) {
+		lowX = vertex.x;
+		lowY = vertex.y;
+	}
+
+	else  {
+		// check bounding box
+		if (vertex.x < lowX)
+			lowX = vertex.x;
+		else if (vertex.x > highX)
+			highX = vertex.x;
+
+		if (vertex.y < lowY)
+			lowY = vertex.y;
+		else if (vertex.y > highY)
+			highY = vertex.y;
+	}
+}
+
 bool Patch::addPoint(Point& vertex)
 {
 	if (boundary.size() > 3) {
 		if (close(vertex,boundary[0]))
 			return true;
 
-		cerr << "Adding vertex at: " << vertex.x << " " << vertex.y << endl;
-		boundary.push_back(vertex);
-		
-		if (boundary.size() == 1) {
-			lowX = vertex.x;
-			lowY = vertex.y;
+
+		if (vertex != boundary.back()) {
+			addPointHelper(vertex);
+			return false;
 		}
 
-		else  {
-			// check bounding box
-			if (vertex.x < lowX)
-				lowX = vertex.x;
-			else if (vertex.x > highX)
-				highX = vertex.x;
+		else
+			return false;
+	}
 
-			if (vertex.y < lowY)
-				lowY = vertex.y;
-			else if (vertex.y > highY)
-				highY = vertex.y;
-		}
-
+	else if (boundary.size() == 0) {
+		addPointHelper(vertex);
 		return false;
 	}
+
 	else {
-		cerr << "Adding vertex at: " << vertex.x << " " << vertex.y << endl;
-		boundary.push_back(vertex);
-		
-		if (boundary.size() == 1) {
-			lowX = vertex.x;
-			lowY = vertex.y;
+		if (vertex != boundary.back()) {
+			addPointHelper(vertex);
+			return false;
 		}
-
-		else  {
-			// check bounding box
-			if (vertex.x < lowX)
-				lowX = vertex.x;
-			else if (vertex.x > highX)
-				highX = vertex.x;
-
-			if (vertex.y < lowY)
-				lowY = vertex.y;
-			else if (vertex.y > highY)
-				highY = vertex.y;
-		}
-
-		return false;
+		else
+			return false;
 	}
 }
 
@@ -88,6 +88,10 @@ void Patch::fillBoundary()
 	}
 
 	swap(border,boundary);
+
+	for (unsigned int i = 0; i < boundary.size(); ++i) {
+		cout << boundary[i].x << " " << boundary[i].y << endl;
+	}
 }
 
 
@@ -140,10 +144,11 @@ void Patch::fillLine(Point pt1, Point pt2, vector<Point>& border)
 		}
 	}
 
+
 	if (reverse)
-		border.insert(border.end(), tempBorder.rbegin(), tempBorder.rend());
+		border.insert(border.end(), tempBorder.rbegin(), tempBorder.rend()-1);
 	else
-		border.insert(border.end(), tempBorder.begin(), tempBorder.end());
+		border.insert(border.end(), tempBorder.begin(), tempBorder.end()-1);
 }
 
 
