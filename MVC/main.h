@@ -7,6 +7,7 @@
 #include "patch.h"
 #include "geometry.h"
 #include "mvc.h"
+#include "batch.h"
 
 
 extern Window source;

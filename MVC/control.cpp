@@ -1,5 +1,6 @@
 #include "control.h"
 #include "main.h"
+#include "batch.h"
 #include <stdlib.h>
 
 enum {
@@ -22,6 +23,8 @@ enum {
 
 	M_DST_PASTE = 13,
 
+	M_BATCH_INIT = 14,
+
 	M_LAST_ENUM
 } MENU_ITEMS;
 
@@ -38,6 +41,7 @@ int makeMenuSrc ()
 	glutAddMenuEntry( "Outline Path", M_SRC_DCLONE);
 	glutAddMenuEntry( "Trace Path", M_SRC_CCLONE);
 	glutAddMenuEntry( "Clear Path", M_SRC_CLEAR);
+	glutAddMenuEntry( "Batch cloning", M_BATCH_INIT);
 
 	int main = glutCreateMenu(menuFunc);
 	glutAddSubMenu(   "File",		file);
@@ -60,6 +64,7 @@ int makeMenuDst ()
 
 	int clone = glutCreateMenu(menuFunc);
 	glutAddMenuEntry( "Paste Patch", M_DST_PASTE);
+	glutAddMenuEntry( "Batch cloning", M_BATCH_INIT);
 
 	int main = glutCreateMenu(menuFunc);
 	glutAddSubMenu(   "File",		file);
@@ -168,10 +173,24 @@ void menuFunc (int value)
 		cout << "Click on the point that will correspond";
 		cout << "to first point in source patch" << endl;
 		break;
+
+	// Batch
+
+	case M_BATCH_INIT:
+		runBatch();
+		break;
 	
 	}
 
 	return;
+}
+
+
+void runBatch()
+{
+	Batch bat;
+	bat.init();
+	bat.run();
 }
 
 bool checkSource()

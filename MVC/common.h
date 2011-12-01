@@ -8,6 +8,7 @@
 #include <GL/glut.h>
 #include <assert.h>
 #include <vector>
+#include <string>
 #include <map>
 
 class Image;

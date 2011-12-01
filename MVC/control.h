@@ -18,6 +18,7 @@ void mouseClickSrc (int button, int state, int x, int y);
 void mouseClickDst (int button, int state, int x, int y);
 void motionSrc(int x, int y);
 
+void runBatch();
 void undoPoint();
 bool checkSource();
 
