@@ -25,12 +25,14 @@ void Patch::init(Image* imgOrig, Image* imgCurr)
 
 void Patch::addPointHelper(Point& vertex)
 {
-	cerr << "Adding vertex at: " << vertex.x << " " << vertex.y << endl;
+	cerr << "Adding vertex at: " << vertex << endl;
 	boundary.push_back(vertex);
 
 	if (boundary.size() == 1) {
 		lowX = vertex.x;
 		lowY = vertex.y;
+		highX = lowX;
+		highY = lowY;
 	}
 
 	else  {
@@ -49,33 +51,18 @@ void Patch::addPointHelper(Point& vertex)
 
 bool Patch::addPoint(Point& vertex)
 {
-	if (boundary.size() > 3) {
-		if (close(vertex,boundary[0]))
+	if (boundary.size() == 0)
+		addPointHelper(vertex);
+
+	else if (vertex != boundary.back()) {
+		if (boundary.size() > 3 && (close(vertex,boundary[0])))
 			return true;
 
-
-		if (vertex != boundary.back()) {
-			addPointHelper(vertex);
-			return false;
-		}
-
 		else
-			return false;
-	}
-
-	else if (boundary.size() == 0) {
-		addPointHelper(vertex);
-		return false;
-	}
-
-	else {
-		if (vertex != boundary.back()) {
 			addPointHelper(vertex);
-			return false;
-		}
-		else
-			return false;
 	}
+
+	return false;
 }
 
 

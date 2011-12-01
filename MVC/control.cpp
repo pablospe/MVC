@@ -259,11 +259,10 @@ void keyboardFunc (unsigned char key, int x, int y)
 void undoPoint()
 {
 	if (source.dClone) {
-		int xLast = source.patch.boundary.back().x;
-		int yLast = source.patch.boundary.back().y;
-		source.currentImg->setPixel_(xLast,yLast,source.originalImg->getPixel_(xLast,yLast));
+		Point last = source.patch.boundary.back();
+		source.currentImg->setPixel_(last,source.originalImg->getPixel_(last));
 		source.patch.boundary.pop_back();
-		cerr << "Removing point at: " << xLast << " " << yLast << endl;
+		cerr << "Removing point at: " << last << endl;
 		glutPostRedisplay();
 	}
 }
@@ -273,16 +272,13 @@ void mouseClickSrc (int button, int state, int x, int y)
 	if (source.currentImg && source.dClone && !source.cClone) {
 
 		if (button == GLUT_DOWN) {
-			static Point lastDPoint(0,0);
 			Point vertex(x,y);
-			if (lastDPoint != vertex && source.patch.addPoint(vertex))
+			if (source.patch.addPoint(vertex))
 				source.patch.closed();
 
 			else
 				for (int chn = RED; chn <= BLUE; ++chn)
-					source.currentImg->setPixel_(x,y,chn, 1);
-
-			lastDPoint = vertex;
+					source.currentImg->setPixel_(vertex,chn, 1);
 		}
 
 		glutPostRedisplay();
@@ -301,19 +297,17 @@ void motionSrc(int x, int y)
 {
 	if (source.currentImg != NULL && source.currentImg->good() && source.cClone) {
 
-		static Point lastCPoint(0,0);
 		Point vertex(x,y);
 
-		if (vertex != lastCPoint && source.patch.boundary.size() > 10 && source.patch.addPoint(vertex))
+		if (source.patch.boundary.size() > 10 && source.patch.addPoint(vertex))
 			source.patch.closed();
 
-		else if (vertex != lastCPoint)
+		else
 			source.patch.addPoint(vertex);
 
 		for (int chn = RED; chn <= BLUE; ++chn)
-			source.currentImg->setPixel_(x,y,chn, 0);
+			source.currentImg->setPixel_(vertex,chn, 0);
 
-		lastCPoint = vertex;
 		glutPostRedisplay();
 	}
 }
