@@ -25,7 +25,7 @@ void Patch::init(Image* imgOrig, Image* imgCurr)
 
 void Patch::addPointHelper(Point& vertex)
 {
-	cerr << "Adding vertex at: " << vertex << endl;
+	cout << "Adding vertex at: " << vertex << endl;
 	boundary.push_back(vertex);
 
 	if (boundary.size() == 1) {

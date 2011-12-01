@@ -101,14 +101,14 @@ void menuFunc (int value)
 		;;
 
 	case M_SRC_OPEN:   // enum #2
-		cerr << "Open file (string - no spaces) : ";
+		cout << "Open file (string - no spaces) : ";
 		cin  >> filename;
 		checkStream(cin);
 		imageLoad(filename, source);
 		break;
 
 	case M_SRC_SAVE:   // enum #3
-		cerr << "Save as (string - no spaces) : ";
+		cout << "Save as (string - no spaces) : ";
 		cin  >> filename;
 		checkStream(cin);
 		imageSave(filename, source);
@@ -121,17 +121,18 @@ void menuFunc (int value)
 	case M_SRC_REVERT:
 		source.patch.clear();
 		imageRevert(source);
+		cout << "done!" << endl;
 		break;
 
 	case M_DST_OPEN:   // enum #2
-		cerr << "Open file (string - no spaces) : ";
+		cout << "Open file (string - no spaces) : ";
 		cin  >> filename;
 		checkStream(cin);
 		imageLoad(filename, destination);
 		break;
 
 	case M_DST_SAVE:   // enum #3
-		cerr << "Save as (string - no spaces) : ";
+		cout << "Save as (string - no spaces) : ";
 		cin  >> filename;
 		checkStream(cin);
 		imageSave(filename, destination);
@@ -143,6 +144,7 @@ void menuFunc (int value)
 
 	case M_DST_REVERT:
 		imageRevert(destination);
+		cout << "done!" << endl;
 		break;
 
 	// Cloning
@@ -156,12 +158,15 @@ void menuFunc (int value)
 
 	case M_SRC_CLEAR:
 		source.patch.clear();
+		cout << "done!" << endl;
 		break;
 
 	// Pasting
 
 	case M_DST_PASTE:
 		destination.paste = true;
+		cout << "Click on the point that will correspond";
+		cout << "to first point in source patch" << endl;
 		break;
 	
 	}
@@ -183,8 +188,8 @@ void initDiscreteClone()
 
 	cout << "Select vertices of patch. ";
 	cout << "The polygon must not intersect itself. ";
-	cout << "Close the patch by selecting a pixel close to the original pixel or press 'c'. ";
-	cout << "Undo a point by pressing 'z'. \n" << endl;
+	cout << "Close patch by selecting a pixel close to the original pixel or press 'c'. ";
+	cout << "Undo a point by pressing 'z'." << endl;
 
 	source.patch.clear();
 	source.dClone = true;
@@ -198,7 +203,7 @@ void initContinuousClone()
 
 	cout << "Click and hold mouse to trace patch. ";
 	cout << "The polygon must not intersect itself. ";
-	cout << "Close the patch by tracing back to the origin pixel or press 'c'. \n" << endl;
+	cout << "Close the patch by tracing back to the origin pixel or press 'c'." << endl;
 
 	source.patch.clear();
 	source.cClone = true;
@@ -250,7 +255,8 @@ void keyboardFunc (unsigned char key, int x, int y)
 		break;
 
 	case 'c':
-		source.patch.closed();
+		if (source.patch.boundary.size() >= 3)
+			source.patch.closed();
 		break;
 
 	}
@@ -262,7 +268,7 @@ void undoPoint()
 		Point last = source.patch.boundary.back();
 		source.currentImg->setPixel_(last,source.originalImg->getPixel_(last));
 		source.patch.boundary.pop_back();
-		cerr << "Removing point at: " << last << endl;
+		cout << "Removing point at: " << last << endl;
 		glutPostRedisplay();
 	}
 }
@@ -314,7 +320,7 @@ void motionSrc(int x, int y)
 
 void menuHelp ()
 {
-	cerr << "not implemented yet" << endl;
+	cout << "not implemented yet" << endl;
 }
 
 
@@ -346,7 +352,7 @@ void imageLoad (const char* filename, Window& w)
 	}
 
 	glutPostRedisplay();
-	cerr << "done!" << endl;
+	cout << "done!" << endl;
 }  
 
 
@@ -370,7 +376,7 @@ void imageSave (const char* filename, Window& w)
 		return;
 	}
 
-	cerr << "done!" << endl;
+	cout << "done!" << endl;
 }
 
 
@@ -379,7 +385,7 @@ void imagePrint (Window& w)
 	if (w.currentImg) {
 		// Note its possible the image size is not equal to the window
 		// size if one dimension is smaller than 64)
-		cerr << "width:    " << w.currentImg->getWidth() << endl
+		cout << "width:    " << w.currentImg->getWidth() << endl
 			 << "height:   " << w.currentImg->getHeight() << endl
 			 << "bits:     " << w.currentImg->getBits() << endl;
 	}
@@ -387,7 +393,7 @@ void imagePrint (Window& w)
 	else
 		cerr << "No image!" << endl;
 
-	cerr << "done!" << endl;
+	cout << "done!" << endl;
 }
 
 void imageRevert (Window& w)
@@ -414,7 +420,5 @@ void imageRevert (Window& w)
 	}
 
 	glutPostRedisplay();
-
-	cerr << "done!" << endl;
 }  
 
