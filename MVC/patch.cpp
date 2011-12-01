@@ -156,7 +156,7 @@ void Patch::highLight()
 {
 	for (unsigned int i = 0; i < boundary.size(); ++i)
 		for (int chn = RED; chn <= BLUE; ++chn)
-			currImg->setPixel_(boundary[i].x,boundary[i].y,chn,1);
+			currImg->setPixel_(boundary[i],chn,1);
 }
 
 

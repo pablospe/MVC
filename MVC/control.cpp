@@ -400,6 +400,7 @@ void imageRevert (Window& w)
 {
 	if (w.patch.boundary.size() != 0)
 		w.patch.clear();
+
 	if (w.currentImg)
 		delete w.currentImg;
 

@@ -28,6 +28,22 @@ bool close(Point& pt1, Point& pt2)
 			abs(pt1.y - pt2.y) <= 2);
 }
 
+Point operator+(Point& left, Point& right)
+{
+	return Point(left.x + right.x, left.y + right.y);
+}
+
+Point operator-(Point& left, Point& right)
+{
+	return Point(left.x - right.x, left.y - right.y);
+}
+
+ostream &operator<<(ostream &out_file, Point& thePoint)
+{
+	out_file << "(" << thePoint.x << ", " << thePoint.y << ")";
+	return out_file;
+}
+
 Pixel::Pixel()
 {
 	col[0]=0;
@@ -43,12 +59,9 @@ Pixel::Pixel(double r, double g, double b)
 
 bool Pixel::isBlack()
 {
-	return (col[0] < .01 && col[1] < .01 && col[2] < .01);
+	return (col[0] < EPSILON && col[1] < EPSILON && col[2] < EPSILON);
 }
 
-Pixel::~Pixel()
-{
-}
 
 // copy constructor
 Pixel::Pixel (const Pixel& toCopy)
@@ -266,6 +279,11 @@ double Image::getPixel_ (int x, int y, int channel)
 	return getPixel(x,y,channel);
 }
 
+double Image::getPixel_(Point pt, int channel)
+{
+	return getPixel_(pt.x, pt.y, channel);
+}
+
 
 Pixel Image::getPixel (int x, int y)
 {
@@ -302,6 +320,10 @@ Pixel Image::getPixel_ (int x, int y)
 	return getPixel(x,y);
 }
 
+Pixel Image::getPixel_(Point pt)
+{
+	return getPixel_(pt.x,pt.y);
+}
 
 Pixel& Image::getPixel (int x, int y, Pixel& pixel)
 {
@@ -333,6 +355,8 @@ Pixel& Image::getPixel_ (int x, int y, Pixel& pixel)
 
 	return getPixel(x,y,pixel);
 }
+
+
 
 
 /* set pixel value.  throw error if any problem with parameters */
@@ -369,6 +393,10 @@ void Image::setPixel_ (int x, int y, int channel, double value)
 	setPixel(x,y,channel,value);
 }
 
+void Image::setPixel_(Point pt, int channel, double value)
+{
+	setPixel_(pt.x,pt.y,channel,value);
+}
 
 
 /* set pixel;  throws error if problems with parameters */
@@ -411,6 +439,11 @@ void Image::setPixel_ (int x, int y, Pixel& pixel)
 	pixel.setColor(GREEN,clamp(pixel.getColor(GREEN),0,1));
 	pixel.setColor(BLUE,clamp(pixel.getColor(BLUE),0,1));
 	setPixel(x,y,pixel);
+}
+
+void Image::setPixel_(Point pt, Pixel &pixel)
+{
+	setPixel_(pt.x, pt.y, pixel);
 }
 
 

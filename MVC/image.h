@@ -32,6 +32,9 @@ struct Point {
 };
 
 bool close(Point&, Point&);
+Point operator-(Point& left, Point& right);
+Point operator+(Point& left, Point& right);
+ostream &operator<<(ostream &out_file, Point& thePoint);
 
 class Pixel
 {
@@ -40,10 +43,11 @@ public:
 	Pixel (double r, double g, double b);
 	Pixel (const Pixel& toCopy);
 	Pixel& operator=(const Pixel& toCopy);
-	~Pixel ();
+
 	bool isBlack();
 	double getColor(int chan);
 	void setColor(int chan, double value);
+
 	friend Pixel operator-(Pixel&,Pixel&);
 	friend Pixel operator+(Pixel&, Pixel&);
 	friend Pixel scale(Pixel, double);
@@ -104,8 +108,10 @@ public:
 	// of bounds coordinates
 	double		getPixel  (int x, int y, int channel);
 	double		getPixel_ (int x, int y, int channel);
+	double		getPixel_ (Point pt, int channel);
 	Pixel		getPixel  (int x, int y);
 	Pixel		getPixel_ (int x, int y);
+	Pixel		getPixel_ (Point pt);
 	Pixel&		getPixel  (int x, int y, Pixel& pixel);
 	Pixel&		getPixel_ (int x, int y, Pixel& pixel);
 
@@ -117,8 +123,10 @@ public:
 	// 
 	void		setPixel  (int x, int y, int channel, double value);
 	void		setPixel_ (int x, int y, int channel, double value);
+	void		setPixel_ (Point pt, int channel, double value);
 	void		setPixel  (int x, int y, Pixel& pixel);
 	void		setPixel_ (int x, int y, Pixel& pixel);
+	void		setPixel_ (Point pt, Pixel& pixel);
 
 	// OpenGL call wrappers
 	void		glDrawPixelsWrapper ();
