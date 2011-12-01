@@ -41,6 +41,7 @@ public:
 	Pixel (const Pixel& toCopy);
 	Pixel& operator=(const Pixel& toCopy);
 	~Pixel ();
+	bool isBlack();
 	double getColor(int chan);
 	void setColor(int chan, double value);
 	friend Pixel operator-(Pixel&,Pixel&);

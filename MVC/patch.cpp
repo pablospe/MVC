@@ -162,13 +162,13 @@ void Patch::highLight()
 
 void Patch::clear()
 {
-	imageRevert(source);
 	boundary.clear();
 	interior.clear();
 	rows.clear();
 	lowX=lowY=highX=highY=0;
 	source.dClone = false;
 	source.cClone = false;
+	imageRevert(source);
 	glutPostRedisplay();
 }
 

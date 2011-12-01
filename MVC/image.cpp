@@ -41,7 +41,10 @@ Pixel::Pixel(double r, double g, double b)
 	col[2]=b;
 }
 
-
+bool Pixel::isBlack()
+{
+	return (col[0] < .01 && col[1] < .01 && col[2] < .01);
+}
 
 Pixel::~Pixel()
 {
