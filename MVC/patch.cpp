@@ -75,10 +75,6 @@ void Patch::fillBoundary()
 	}
 
 	swap(border,boundary);
-
-	for (unsigned int i = 0; i < boundary.size(); ++i) {
-		cout << boundary[i].x << " " << boundary[i].y << endl;
-	}
 }
 
 
@@ -164,7 +160,6 @@ void Patch::closed()
 	cout << "Patch is closed" << endl;
 	fillBoundary();
 	computeInterior();
-	color();
 	source.cClone = false;
 	source.dClone = false;
 	glutPostRedisplay();
@@ -260,14 +255,6 @@ bool Patch::checkRow(int x, int y, vector<int>& yBoundary)
 	return (intersection % 2 == 1);
 }
 
-void Patch::color()
-{
-	/***
-	for (unsigned int i = 0; i < interior.size(); ++i)
-		for (int chn = RED; chn <= BLUE; ++chn)
-			currImg->setPixel_(interior[i].x,interior[i].y,chn,1);
-	***/
-}
 
 Window::Window()
 :	height(300),width(300),glNum(0),
@@ -286,6 +273,4 @@ void Window::update()
 	patch.origImg = originalImg;
 	patch.img_height = height;
 	patch.img_width = width;
-
-
 }

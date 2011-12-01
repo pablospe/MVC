@@ -24,7 +24,6 @@ public:
 	void fillLine(Point pt1, Point pt2, vector<Point>& border);
 
 	void highLight();
-	void color();
 	void clear();
 	void closed();
 
