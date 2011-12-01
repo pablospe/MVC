@@ -22,6 +22,14 @@ void runBatch();
 void undoPoint();
 bool checkSource();
 
+static inline void checkStream (const istream& in)
+{
+	if (in.fail())
+	{
+		cerr << "Fatal error: stream failed!" << endl;
+		exit(-1);
+	}
+}
 /***
 void idle_func ();
 void process_func (int value);

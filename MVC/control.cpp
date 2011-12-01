@@ -78,16 +78,6 @@ int makeMenuDst ()
 }
 
 
-static inline void checkStream (const istream& in)
-{
-	if (in.fail())
-	{
-		cerr << "Fatal error: stream failed!" << endl;
-		exit(-1);
-	}
-}
-
-
 void menuFunc (int value)
 {
 	// variables used in the switch statement
@@ -190,6 +180,12 @@ void runBatch()
 {
 	Batch bat;
 	bat.init();
+
+	int frames;
+	cout << "Enter the number of frames to clone over: ";
+	cin >> frames;
+	checkStream(cin);
+
 	bat.run();
 }
 

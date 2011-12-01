@@ -70,7 +70,7 @@ void Patch::fillBoundary()
 {
 	vector<Point> border;
 	border.reserve(pow(double(boundary.size()),2));
-	for (unsigned int i = 0; i < boundary.size(); ++i) {
+	for (size_t i = 0; i < boundary.size(); ++i) {
 		fillLine(boundary[i], boundary[((i+1) % boundary.size())], border);
 	}
 
@@ -137,7 +137,7 @@ void Patch::fillLine(Point pt1, Point pt2, vector<Point>& border)
 
 void Patch::highLight()
 {
-	for (unsigned int i = 0; i < boundary.size(); ++i)
+	for (size_t i = 0; i < boundary.size(); ++i)
 		for (int chn = RED; chn <= BLUE; ++chn)
 			currImg->setPixel_(boundary[i],chn,1);
 }
@@ -168,7 +168,7 @@ void Patch::closed()
 
 void Patch::computeRows()
 {
-	for (unsigned int i = 0; i < boundary.size(); ++i) {
+	for (size_t i = 0; i < boundary.size(); ++i) {
 		int x = boundary[i].x;
 		int y = boundary[i].y;
 
@@ -215,7 +215,7 @@ bool Patch::checkAdjaceny(int x, int y, vector<int>& yBoundary)
 	sort(yBoundary.begin(),yBoundary.end());
 
 	bool adj = true;
-	for (unsigned int i = 0; i < yBoundary.size() - 1; ++i)
+	for (size_t i = 0; i < yBoundary.size() - 1; ++i)
 		if (yBoundary[i] + 1 != yBoundary[i+1] && yBoundary[i] != yBoundary[i+1])
 			adj = false;
 
@@ -226,7 +226,7 @@ bool Patch::checkAdjaceny(int x, int y, vector<int>& yBoundary)
 bool Patch::checkRow(int x, int y, vector<int>& yBoundary)
 {
 	if (checkAdjaceny(x,y,yBoundary)) {
-		for (unsigned int i = 0; i < yBoundary.size(); ++i)
+		for (size_t i = 0; i < yBoundary.size(); ++i)
 			if (y == yBoundary[i])
 				return true;
 		return false;
@@ -235,11 +235,11 @@ bool Patch::checkRow(int x, int y, vector<int>& yBoundary)
 	int intersection = 0;
 	vector<int> sub;
 
-	for (unsigned int i = 0; i < rows[x].size(); ++i) {
+	for (size_t i = 0; i < rows[x].size(); ++i) {
 		if (rows[x][i] > y) {
 			bool adjacent = false;
 
-			for (unsigned int j = 0; j < sub.size(); ++j)
+			for (size_t j = 0; j < sub.size(); ++j)
 				if (abs(sub[j] - rows[x][i]) <= 1) {
 					adjacent = true;
 					break;

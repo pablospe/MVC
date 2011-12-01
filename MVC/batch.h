@@ -3,14 +3,17 @@
 
 #include "common.h"
 #include "image.h"
+#include "patch.h"
 
 class Batch {
 public:
-	Batch();
 	void init();
+	void runFirst();
 	void run();
 
-	int counter;
+	int srcCounter;
+	int dstCounter;
+	int saveCounter;
 	std::string srcFileBase;
 	std::string dstFileBase;
 	std::string saveFileBase;

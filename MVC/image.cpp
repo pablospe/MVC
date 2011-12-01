@@ -572,8 +572,8 @@ int Image::writeBMP (const char* filename)
 //#if !defined(WIN32) || defined(_CONSOLE)
 
 typedef unsigned char BYTE;		/* 8 bits */
-typedef unsigned short int WORD;	/* 16-bit unsigned integer. */
-typedef unsigned int DWORD;		/* 32-bit unsigned integer */
+typedef unsigned short int WORD;	/* 16-bit size_teger. */
+typedef size_t DWORD;		/* 32-bit size_teger */
 typedef int LONG;			/* 32-bit signed integer */
 
 
