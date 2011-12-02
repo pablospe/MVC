@@ -2,7 +2,7 @@
 #include "main.h"
 #include "control.h"
 
-void Batch::init()
+void Batch::init(Patch p)
 {
 	char fileName[MAX_LINE];
 	size_t counter;
@@ -33,14 +33,11 @@ void Batch::init()
 	dstCounter = counter;
 
 	saveCounter = 0;
+	patch = p;
 }
 
 void Batch::run()
 {
-
-}
-
-void Batch::runFirst()
-{
-
+	
+	++saveCounter;
 }

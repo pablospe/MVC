@@ -7,10 +7,11 @@
 
 class Batch {
 public:
-	void init();
-	void runFirst();
+	void init(Patch p);
 	void run();
 
+private:
+	Patch patch;
 	int srcCounter;
 	int dstCounter;
 	int saveCounter;

@@ -12,6 +12,7 @@ public:
 	Patch();
 	void init(Image* imgOrig, Image* imgCurr);
 
+	bool empty();
 	bool addPoint(Point& vertex);
 	bool interiorPoint(int x, int y);
 	bool checkRow(int x,int y, vector<int>& yBoundary);
@@ -34,6 +35,7 @@ public:
 	int lowX, lowY, highX, highY;
 	vector<Point> interior;
 	vector<Point> boundary;
+private:
 	map<int, std::vector<int> > rows;
 };
 

@@ -41,11 +41,14 @@ int makeMenuSrc ()
 	glutAddMenuEntry( "Outline Path", M_SRC_DCLONE);
 	glutAddMenuEntry( "Trace Path", M_SRC_CCLONE);
 	glutAddMenuEntry( "Clear Path", M_SRC_CLEAR);
-	glutAddMenuEntry( "Batch cloning", M_BATCH_INIT);
+
+	int batch = glutCreateMenu(menuFunc);
+	glutAddMenuEntry( "Run", M_BATCH_INIT);
 
 	int main = glutCreateMenu(menuFunc);
 	glutAddSubMenu(   "File",		file);
 	glutAddSubMenu(   "Clone",		clone);
+	glutAddSubMenu(   "Batch",		batch);
 	glutAddMenuEntry( "Help",		M_HELP);
 	glutAddMenuEntry( "Quit",		M_QUIT);
 
@@ -64,11 +67,14 @@ int makeMenuDst ()
 
 	int clone = glutCreateMenu(menuFunc);
 	glutAddMenuEntry( "Paste Patch", M_DST_PASTE);
-	glutAddMenuEntry( "Batch cloning", M_BATCH_INIT);
+
+	int batch = glutCreateMenu(menuFunc);
+	glutAddMenuEntry( "Run", M_BATCH_INIT);
 
 	int main = glutCreateMenu(menuFunc);
 	glutAddSubMenu(   "File",		file);
 	glutAddSubMenu(   "Clone",		clone);
+	glutAddSubMenu(   "Batch",		batch);
 	glutAddMenuEntry( "Help",		M_HELP);
 	glutAddMenuEntry( "Quit",		M_QUIT);
 
@@ -100,6 +106,7 @@ void menuFunc (int value)
 		cin  >> filename;
 		checkStream(cin);
 		imageLoad(filename, source);
+		cout << "done!" << endl;
 		break;
 
 	case M_SRC_SAVE:   // enum #3
@@ -107,6 +114,7 @@ void menuFunc (int value)
 		cin  >> filename;
 		checkStream(cin);
 		imageSave(filename, source);
+		cout << "done!" << endl;
 		break;
 
 	case M_SRC_INFO:
@@ -124,6 +132,7 @@ void menuFunc (int value)
 		cin  >> filename;
 		checkStream(cin);
 		imageLoad(filename, destination);
+		cout << "done!" << endl;
 		break;
 
 	case M_DST_SAVE:   // enum #3
@@ -131,6 +140,7 @@ void menuFunc (int value)
 		cin  >> filename;
 		checkStream(cin);
 		imageSave(filename, destination);
+		cout << "done!" << endl;	
 		break;
 
 	case M_DST_INFO:
@@ -178,15 +188,21 @@ void menuFunc (int value)
 
 void runBatch()
 {
-	Batch bat;
-	bat.init();
+	if (source.currentImg == NULL || source.patch.empty()) {
+		cerr << "You must first select a patch in the current source image" << endl;
+		return;
+	}
 
-	int frames;
+	Batch bat;
+	bat.init(source.patch);
+
+	size_t frames;
 	cout << "Enter the number of frames to clone over: ";
 	cin >> frames;
 	checkStream(cin);
 
-	bat.run();
+	for (size_t i = 0; i < frames; ++i)
+		bat.run();
 }
 
 bool checkSource()
@@ -367,7 +383,6 @@ void imageLoad (const char* filename, Window& w)
 	}
 
 	glutPostRedisplay();
-	cout << "done!" << endl;
 }  
 
 
@@ -390,8 +405,6 @@ void imageSave (const char* filename, Window& w)
 		cerr << "No image!" << endl;
 		return;
 	}
-
-	cout << "done!" << endl;
 }
 
 

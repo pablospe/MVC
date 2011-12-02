@@ -49,6 +49,11 @@ void Patch::addPointHelper(Point& vertex)
 	}
 }
 
+bool Patch::empty()
+{
+	return (interior.size() > 0);
+}
+
 bool Patch::addPoint(Point& vertex)
 {
 	if (boundary.size() == 0)
