@@ -23,7 +23,7 @@ void composite(Point start)
 
 		destination.currentImg->setPixel_(targetPoint, result);
 	}
-	glutPostRedisplay();
+	if (!destination.batch)	glutPostRedisplay();
 }
 
 vector<double> meanValueCoordinates(Point pt)

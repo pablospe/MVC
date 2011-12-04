@@ -11,7 +11,6 @@ public:
 	void run();
 
 private:
-	Patch patch;
 	int srcCounter;
 	int dstCounter;
 	int saveCounter;

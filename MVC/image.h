@@ -29,6 +29,10 @@ struct Point {
 	{
 		return (!operator==(p));
 	}
+	bool valid()
+	{
+		return (x >= 0 && y >= 0);
+	}
 };
 
 bool close(Point&, Point&);

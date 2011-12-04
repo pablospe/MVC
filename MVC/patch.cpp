@@ -51,7 +51,7 @@ void Patch::addPointHelper(Point& vertex)
 
 bool Patch::empty()
 {
-	return (interior.size() > 0);
+	return !(interior.size() > 0);
 }
 
 bool Patch::addPoint(Point& vertex)
@@ -263,10 +263,11 @@ bool Patch::checkRow(int x, int y, vector<int>& yBoundary)
 
 Window::Window()
 :	height(300),width(300),glNum(0),
-	dClone(false),cClone(false),paste(false),
+	dClone(false),cClone(false),paste(false),batch(false),
 	currentImg(NULL), originalImg(NULL)
 {
-	//Nothing to do
+	pastePoint.x = -1;
+	pastePoint.y = -1;
 }
 
 void Window::update()

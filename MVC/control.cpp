@@ -188,10 +188,13 @@ void menuFunc (int value)
 
 void runBatch()
 {
-	if (source.currentImg == NULL || source.patch.empty()) {
-		cerr << "You must first select a patch in the current source image" << endl;
+	if (source.currentImg == NULL || source.patch.empty() || !destination.pastePoint.valid()) {
+		cerr << "You must first select a patch in the current source image and a point to paste in the current target image" << endl;
 		return;
 	}
+
+	source.batch = true;
+	destination.batch = true;
 
 	Batch bat;
 	bat.init(source.patch);
@@ -203,6 +206,9 @@ void runBatch()
 
 	for (size_t i = 0; i < frames; ++i)
 		bat.run();
+
+	source.batch = false;
+	destination.batch = false;
 }
 
 bool checkSource()
@@ -325,6 +331,7 @@ void mouseClickSrc (int button, int state, int x, int y)
 void mouseClickDst (int button, int state, int x, int y)
 {
 	if (destination.paste) {
+		destination.pastePoint = Point(x,y);
 		composite(Point(x,y));
 		destination.paste = false;
 	}
@@ -382,7 +389,7 @@ void imageLoad (const char* filename, Window& w)
 		return;
 	}
 
-	glutPostRedisplay();
+	if (!w.batch) glutPostRedisplay();
 }  
 
 

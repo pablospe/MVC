@@ -46,10 +46,11 @@ public:
 	void update();
 
 	// Data members
+	Point pastePoint;
 	Patch patch;
 	int height, width;
 	int glNum;
-	bool dClone, cClone, paste;
+	bool dClone, cClone, paste, batch;
 
 	Image* currentImg;
 	Image* originalImg;

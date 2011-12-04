@@ -33,7 +33,6 @@ void Batch::init(Patch p)
 	dstCounter = counter;
 
 	saveCounter = 0;
-	patch = p;
 }
 
 void Batch::run()
