@@ -5,6 +5,21 @@ using namespace std;
 
 void composite(Point start)
 {
+	vector<vector<Point> > hier = boundaryHierarchy();
+
+	
+	/*** Code for testing boundary levels
+	for (size_t i = 0; i < hier.size(); ++i) {
+		for (size_t j = 0; j < hier[i].size(); ++j) {
+			cout << hier[i][j] << "\t";
+			if (j%2 == 1)
+				cout << endl;
+		}
+		cout << endl;
+		cout << endl;
+	}
+	***/
+
 	vector<Pixel> diff = boundaryDiff(start);
 	
 	for (size_t i = 0; i < source.patch.interior.size(); ++i) {
