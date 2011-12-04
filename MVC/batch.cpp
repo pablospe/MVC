@@ -66,7 +66,8 @@ void Batch::run()
 
 	imageLoad(srcLoad.c_str(), source);
 	imageLoad(dstLoad.c_str(), destination);
-	composite(destination.pastePoint);
+	MVC membrane(destination.pastePoint);
+	membrane.composite();
 	imageSave(resultSave.c_str(), destination);
 
 	++saveCounter;

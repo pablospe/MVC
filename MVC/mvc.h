@@ -6,14 +6,20 @@
 #include "patch.h"
 #include "geometry.h"
 
-// Top-level algorithm
-void composite(Point start);
+class MVC {
+public:
+	MVC(Point Start);
+	// Top-level algorithm
+	void composite();
 
-// Helper functions
-std::vector<double> meanValueCoordinates(Point pt);
-std::vector<Point> targetBoundary(Point start);
-std::vector<Pixel> boundaryDiff(Point start);
-std::vector<std::vector<Point> > boundaryHierarchy();
-double boundaryWeight(Point pt, int index);
+	// Helper functions
+	std::vector<double> meanValueCoordinates(Point pt);
+	std::vector<Point> targetBoundary();
+	std::vector<Pixel> boundaryDiff();
+	std::vector<std::vector<Point> > boundaryHierarchy();
+	double boundaryWeight(Point pt, int index);
+private:
+	Point start;
+};
 
 #endif

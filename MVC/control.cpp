@@ -312,7 +312,8 @@ void mouseClickDst (int button, int state, int x, int y)
 {
 	if (destination.paste) {
 		destination.pastePoint = Point(x,y);
-		composite(Point(x,y));
+		MVC membrane(Point(x,y));
+		membrane.composite();
 		destination.paste = false;
 		endProcess();
 	}

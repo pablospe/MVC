@@ -3,11 +3,16 @@
 
 using namespace std;
 
-void composite(Point start)
+MVC::MVC(Point Start)
+:	start(Start)
+{
+	// Nothing to do
+}
+
+void MVC::composite()
 {
 	vector<vector<Point> > hier = boundaryHierarchy();
 
-	
 	/*** Code for testing boundary levels
 	for (size_t i = 0; i < hier.size(); ++i) {
 		for (size_t j = 0; j < hier[i].size(); ++j) {
@@ -20,7 +25,7 @@ void composite(Point start)
 	}
 	***/
 
-	vector<Pixel> diff = boundaryDiff(start);
+	vector<Pixel> diff = boundaryDiff();
 	
 	for (size_t i = 0; i < source.patch.interior.size(); ++i) {
 		Point sourcePoint = source.patch.interior[i];
@@ -41,7 +46,7 @@ void composite(Point start)
 	glutPostRedisplay();
 }
 
-vector<double> meanValueCoordinates(Point pt)
+vector<double> MVC::meanValueCoordinates(Point pt)
 {
 	vector<double> values;
 	double total = 0;
@@ -60,7 +65,7 @@ vector<double> meanValueCoordinates(Point pt)
 	return values;
 }
 
-double boundaryWeight(Point pt, int index)
+double MVC::boundaryWeight(Point pt, int index)
 {
 	Point current = source.patch.boundary[index];
 	Point previous;
@@ -91,7 +96,7 @@ double boundaryWeight(Point pt, int index)
 	return ((tHalfAngle0 + tHalfAngle1) / (distance));
 }
 
-vector<Point> targetBoundary(Point start)
+vector<Point> MVC::targetBoundary()
 {
 	vector<Point> bounds;
 	for (size_t i = 0; i < source.patch.boundary.size(); ++i)
@@ -99,10 +104,10 @@ vector<Point> targetBoundary(Point start)
 	return bounds;
 }
 
-vector<Pixel> boundaryDiff(Point start)
+vector<Pixel> MVC::boundaryDiff()
 {
 	vector<Pixel> differences;
-	vector<Point> targetBounds = targetBoundary(start);
+	vector<Point> targetBounds = targetBoundary();
 	
 	assert(source.patch.boundary.size() == targetBounds.size());
 
@@ -119,7 +124,7 @@ vector<Pixel> boundaryDiff(Point start)
 	return differences;
 }
 
-vector<vector<Point> > boundaryHierarchy()
+vector<vector<Point> > MVC::boundaryHierarchy()
 {
 	vector<vector<Point> > hierarchy;
 	hierarchy.reserve(log(double(source.patch.boundary.size())) / log(double(2)));

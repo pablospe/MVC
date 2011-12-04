@@ -4,6 +4,7 @@
 #include "common.h"
 #include "image.h"
 #include "patch.h"
+#include "mvc.h"
 
 class Batch {
 public:
