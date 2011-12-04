@@ -20,6 +20,7 @@ public:
 	double boundaryWeight(Point pt, int index);
 private:
 	Point start;
+	std::vector<std::vector<Pixel> > history;
 };
 
 #endif

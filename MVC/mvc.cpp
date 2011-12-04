@@ -6,7 +6,7 @@ using namespace std;
 MVC::MVC(Point Start)
 :	start(Start)
 {
-	// Nothing to do
+	history.reserve(8);
 }
 
 void MVC::composite()
@@ -26,23 +26,42 @@ void MVC::composite()
 	***/
 
 	vector<Pixel> diff = boundaryDiff();
+
+	vector<Pixel> membrane;
+	membrane.reserve(source.patch.interior.size());
 	
 	for (size_t i = 0; i < source.patch.interior.size(); ++i) {
 		Point sourcePoint = source.patch.interior[i];
 		Point targetPoint = translate(source.patch.boundary[0],start,sourcePoint);
 
-		Pixel interpolant;
+
 		vector<double> meanValues = meanValueCoordinates(sourcePoint);
 
 		assert(meanValues.size() ==  diff.size());
-
+		
+		Pixel interpolant;
 		for (size_t j = 0; j < diff.size(); ++j)		
 			interpolant = interpolant + scale(diff[j], meanValues[j]);
+		
+		double timeWeight = 1;
+		for (size_t j = 0; j < history.size(); ++ j) {
+			int dT =  history.size() - j + 1;
+			double weight = pow(double(dT), -0.75);
+			timeWeight += weight;
+
+			interpolant = interpolant + scale(history[j][i], weight);
+		}
+
+		interpolant = scale(interpolant, 1/timeWeight);
 
 		Pixel result = interpolant + source.originalImg->getPixel_(sourcePoint);
-
 		destination.currentImg->setPixel_(targetPoint, result);
+
+		membrane.push_back(interpolant);
 	}
+	
+	history.push_back(membrane);
+
 	glutPostRedisplay();
 }
 
