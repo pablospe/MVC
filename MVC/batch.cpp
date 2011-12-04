@@ -1,6 +1,7 @@
 #include "batch.h"
 #include "main.h"
 #include "control.h"
+#include <sstream>
 
 void Batch::init(Patch p)
 {
@@ -35,8 +36,36 @@ void Batch::init(Patch p)
 	saveCounter = 0;
 }
 
+void Batch::prepareFiles(string& srcLoad, string& dstLoad, string& resultSave)
+{
+	stringstream index;
+	index << srcCounter + saveCounter;
+	srcLoad = srcFileBase;
+	srcFileBase.append(index.str()).append(".bmp");
+	swap(srcLoad, srcFileBase);
+	index.str("");
+
+	index << dstCounter + saveCounter;
+	dstLoad = dstFileBase;
+	dstFileBase.append(index.str()).append(".bmp");
+	swap(dstLoad, dstFileBase);
+	index.str("");
+
+	index << saveCounter;
+	resultSave = saveFileBase;
+	saveFileBase.append(index.str()).append(".bmp");
+	swap(resultSave, saveFileBase);
+}
+
 void Batch::run()
 {
-	
+	string srcLoad, dstLoad, resultSave;
+	prepareFiles(srcLoad, dstLoad, resultSave);
+
+	imageLoad(srcLoad.c_str(), source);
+	imageLoad(dstLoad.c_str(), destination);
+	composite(destination.pastePoint);
+	imageSave(resultSave.c_str(), destination);
+
 	++saveCounter;
 }

@@ -170,7 +170,7 @@ void menuFunc (int value)
 
 	case M_DST_PASTE:
 		destination.paste = true;
-		cout << "Click on the point that will correspond";
+		cout << "Click on the point that will correspond ";
 		cout << "to first point in source patch" << endl;
 		break;
 
@@ -178,6 +178,7 @@ void menuFunc (int value)
 
 	case M_BATCH_INIT:
 		runBatch();
+		cout << "done!" << endl;
 		break;
 	
 	}
