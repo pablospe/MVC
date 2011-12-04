@@ -2,6 +2,8 @@
 #include "main.h"
 #include "control.h"
 
+using namespace std;
+
 Patch::Patch()
 :	origImg(NULL),currImg(NULL),
 	img_width(0), img_height(0),
@@ -131,7 +133,6 @@ void Patch::fillLine(Point pt1, Point pt2, vector<Point>& border)
 			--cumErr;
 		}
 	}
-
 
 	if (reverse)
 		border.insert(border.end(), tempBorder.rbegin(), tempBorder.rend()-1);

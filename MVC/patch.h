@@ -15,14 +15,14 @@ public:
 	bool empty();
 	bool addPoint(Point& vertex);
 	bool interiorPoint(int x, int y);
-	bool checkRow(int x,int y, vector<int>& yBoundary);
-	bool checkAdjaceny(int x, int y, vector<int>& yBoundary);
+	bool checkRow(int x,int y, std::vector<int>& yBoundary);
+	bool checkAdjaceny(int x, int y, std::vector<int>& yBoundary);
 
 	void addPointHelper(Point& vertex);
 	void computeRows();
 	void computeInterior();
 	void fillBoundary();
-	void fillLine(Point pt1, Point pt2, vector<Point>& border);
+	void fillLine(Point pt1, Point pt2, std::vector<Point>& border);
 
 	void highLight();
 	void clear();
@@ -33,10 +33,10 @@ public:
 	Image* currImg;
 	int img_width, img_height;
 	int lowX, lowY, highX, highY;
-	vector<Point> interior;
-	vector<Point> boundary;
+	std::vector<Point> interior;
+	std::vector<Point> boundary;
 private:
-	map<int, std::vector<int> > rows;
+	std::map<int, std::vector<int> > rows;
 };
 
 class Window

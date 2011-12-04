@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <setjmp.h>
 
-
+using namespace std;
 
 static const int maxvals[9] = { 0, 1, 3, 7, 15, 31, 63, 127, 255 };
 

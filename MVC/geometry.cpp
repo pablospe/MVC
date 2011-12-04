@@ -26,3 +26,10 @@ double angle(Point ref, Point a, Point b)
 
 	return acos(clamp(dot / (sizeA * sizeB),-1,1));
 }
+
+Point translate(Point oldOrigin, Point newOrigin, Point pt)
+{
+	Point delta = pt - oldOrigin;
+
+	return newOrigin + delta;
+}

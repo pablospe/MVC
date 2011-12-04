@@ -1,8 +1,6 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-
-//#include "win32.h"
 #include <math.h>
 #include <iostream>
 #include <GL/glut.h>
@@ -29,10 +27,7 @@ class Image;
   #define M_E           2.7182818284590452354
 #endif // M_PI
 
-
-
 // macros
-
 #define sqr(x)          ((x)*(x))
 #define cube(x)		((x) * (x) * (x))
 #define max(a,b)        ((a)>(b)?(a):(b))
@@ -48,10 +43,10 @@ class Image;
 
 #define sign(x)         ((x)<0?-1:1)
 
-
+/***
 // stl defs for convenience
 #define VECTOR(t)		std::vector < t >
 #define MAP(s,t)		std::map < s, t >
-
+***/
 
 #endif // COMMON_H

@@ -8,7 +8,9 @@
 class Batch {
 public:
 	void init(Patch p);
-	void prepareFiles(string& srcLoad, string& dstLoad, string& resultSave);
+	void prepareFiles(std::string& srcLoad, 
+					  std::string& dstLoad, 
+					  std::string& resultSave);
 	void run();
 
 private:

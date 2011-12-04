@@ -8,4 +8,6 @@ double angle(Point ref, Point a, Point b);
 double size(Point pt);
 double dist(Point pt0, Point pt1);
 
+Point translate(Point oldOrigin, Point newOrigin, Point pt);
+
 #endif

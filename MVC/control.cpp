@@ -3,6 +3,8 @@
 #include "batch.h"
 #include <stdlib.h>
 
+using namespace std;
+
 enum {
 	M_QUIT = 0,
 	M_HELP = 1,
@@ -101,55 +103,58 @@ void menuFunc (int value)
 		break;
 		;;
 
-	case M_SRC_OPEN:   // enum #2
+	// General i/o
+	case M_SRC_OPEN:
 		cout << "Open file (string - no spaces) : ";
 		cin  >> filename;
 		checkStream(cin);
 		imageLoad(filename, source);
-		cout << "done!" << endl;
+		endProcess();
 		break;
 
-	case M_SRC_SAVE:   // enum #3
+	case M_SRC_SAVE:
 		cout << "Save as (string - no spaces) : ";
 		cin  >> filename;
 		checkStream(cin);
 		imageSave(filename, source);
-		cout << "done!" << endl;
+		endProcess();
 		break;
 
 	case M_SRC_INFO:
 		imagePrint(source);
+		endProcess();
 		break;
 
 	case M_SRC_REVERT:
 		source.patch.clear();
 		imageRevert(source);
-		cout << "done!" << endl;
+		endProcess();
 		break;
 
-	case M_DST_OPEN:   // enum #2
+	case M_DST_OPEN:
 		cout << "Open file (string - no spaces) : ";
 		cin  >> filename;
 		checkStream(cin);
 		imageLoad(filename, destination);
-		cout << "done!" << endl;
+		endProcess();
 		break;
 
-	case M_DST_SAVE:   // enum #3
+	case M_DST_SAVE:
 		cout << "Save as (string - no spaces) : ";
 		cin  >> filename;
 		checkStream(cin);
 		imageSave(filename, destination);
-		cout << "done!" << endl;	
+		endProcess();	
 		break;
 
 	case M_DST_INFO:
 		imagePrint(destination);
+		endProcess();
 		break;
 
 	case M_DST_REVERT:
 		imageRevert(destination);
-		cout << "done!" << endl;
+		endProcess();
 		break;
 
 	// Cloning
@@ -163,11 +168,10 @@ void menuFunc (int value)
 
 	case M_SRC_CLEAR:
 		source.patch.clear();
-		cout << "done!" << endl;
+		endProcess();
 		break;
 
 	// Pasting
-
 	case M_DST_PASTE:
 		destination.paste = true;
 		cout << "Click on the point that will correspond ";
@@ -175,15 +179,12 @@ void menuFunc (int value)
 		break;
 
 	// Batch
-
 	case M_BATCH_INIT:
 		runBatch();
-		cout << "done!" << endl;
+		endProcess();
 		break;
 	
 	}
-
-	return;
 }
 
 
@@ -210,6 +211,9 @@ void runBatch()
 
 	source.batch = false;
 	destination.batch = false;
+
+	// Load last frame
+	glutPostRedisplay();
 }
 
 bool checkSource()
@@ -246,31 +250,6 @@ void initContinuousClone()
 	source.patch.clear();
 	source.cClone = true;
 }
-
-/***
-void process_func (int value)
-{
-	cerr << "in process_func" <<  endl;
-	// variables used in the switch statement
-	char filename[MAX_LINE];
-	Image* resultImage = NULL;
-	Pixel thePixel;
-
-	if (resultImage != NULL)
-	{
-		delete currentImage;
-		currentImage = resultImage;
-
-		if (currentImage->getWidth()  != window_width    ||
-			currentImage->getHeight() != window_height)
-			reshape(currentImage->getWidth(), currentImage->getHeight());
-
-		cerr << "done!" << endl;
-
-		glutPostRedisplay();
-	}
-}
-***/
 
 void keyboardFunc (unsigned char key, int x, int y)
 {
@@ -335,6 +314,7 @@ void mouseClickDst (int button, int state, int x, int y)
 		destination.pastePoint = Point(x,y);
 		composite(Point(x,y));
 		destination.paste = false;
+		endProcess();
 	}
 }
 
@@ -390,7 +370,7 @@ void imageLoad (const char* filename, Window& w)
 		return;
 	}
 
-	if (!w.batch) glutPostRedisplay();
+	glutPostRedisplay();
 }  
 
 
@@ -428,8 +408,6 @@ void imagePrint (Window& w)
 
 	else
 		cerr << "No image!" << endl;
-
-	cout << "done!" << endl;
 }
 
 void imageRevert (Window& w)

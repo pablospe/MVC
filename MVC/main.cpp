@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <time.h>
 
+using namespace std;
+
 Window source;
 Window destination;
 
@@ -13,7 +15,7 @@ int main(int argc, char** argv)
 	glutInit(&argc, &argv[0]); 
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
 
-	// SOURCE WINDOW
+	// source window
 	glutInitWindowPosition(100,400);
 	glutInitWindowSize(source.width, source.height);
 	source.glNum = glutCreateWindow("Source");
@@ -25,9 +27,8 @@ int main(int argc, char** argv)
 	glutKeyboardFunc(keyboardFunc);
 	glutMouseFunc(mouseClickSrc);
 	glutMotionFunc(motionSrc);
-	// END SOURCE WINDOW
 
-	// TARGET WINDOW
+	// target window
 	glutInitWindowPosition(500,400);
 	glutInitWindowSize(destination.width, destination.height);
 	destination.glNum = glutCreateWindow("Target");
@@ -38,12 +39,10 @@ int main(int argc, char** argv)
 	makeMenuDst();
 	glutKeyboardFunc(keyboardFunc);
 	glutMouseFunc(mouseClickDst);
-	// END TARGET WINDOW
 
 	imageLoad("../cat.bmp", source);
 	imageLoad("../test.bmp", destination);
 
-	// wait for something to happen
 	glutMainLoop();
 }
 
@@ -58,14 +57,12 @@ void display()
 		cerr << "OpenGL error: " << errString << endl;
 	}
 
-	
 	// clear the frame buffer
 	glutSetWindow(source.glNum);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glutSetWindow(destination.glNum);
 	glClear(GL_COLOR_BUFFER_BIT);
-
 
 	// draw the image
 	if (source.currentImg) {
@@ -80,7 +77,6 @@ void display()
 
 	// swap buffers
 	glutSwapBuffers();
-
 
 	// swap buffers
 	glutSetWindow(source.glNum);

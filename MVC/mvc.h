@@ -6,14 +6,13 @@
 #include "patch.h"
 #include "geometry.h"
 
+// Top-level algorithm
 void composite(Point start);
 
+// Helper functions
 std::vector<double> meanValueCoordinates(Point pt);
 std::vector<Point> targetBoundary(Point start);
 std::vector<Pixel> boundaryDiff(Point start);
-
-Point translate(Point oldOrigin, Point newOrigin, Point pt);
-
 double boundaryWeight(Point pt, int index);
 
 #endif

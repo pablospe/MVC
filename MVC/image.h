@@ -6,8 +6,6 @@ class Image;
 #include <fstream>
 #include "common.h"
 
-using namespace std;
-
 #define RED	0
 #define GREEN	1
 #define BLUE	2
@@ -38,7 +36,7 @@ struct Point {
 bool close(Point&, Point&);
 Point operator-(Point& left, Point& right);
 Point operator+(Point& left, Point& right);
-ostream &operator<<(ostream &out_file, Point& thePoint);
+std::ostream &operator<<(std::ostream &out_file, Point& thePoint);
 
 class Pixel
 {
@@ -63,7 +61,7 @@ Pixel operator-(Pixel& left, Pixel& right);
 Pixel operator+(Pixel& left, Pixel& right);
 Pixel scale(Pixel, double weight);
 
-ostream &operator<<(ostream &out_file, Pixel& thePixel);
+std::ostream &operator<<(std::ostream &out_file, Pixel& thePixel);
 
 /*
 * generic multi channel 8-bit max image class.  can read and write
@@ -144,10 +142,9 @@ public:
 
 	// BMP specific read and write calls
 	int		readBMP (const char* filename);
-	int		readBMP (ifstream& file);
+	int		readBMP (std::ifstream& file);
 	int		writeBMP (const char* filename);
-	int		writeBMP (ofstream& file);
-
+	int		writeBMP (std::ofstream& file);
 
 
 private:

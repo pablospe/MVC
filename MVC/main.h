@@ -9,12 +9,6 @@
 #include "mvc.h"
 #include "batch.h"
 
-/***
- To Do
- - resolve problem with computing MVC using source patch,
- which will get cleared whenever a new image is loaded"
- ***/
-
 extern Window source;
 extern Window destination;
 

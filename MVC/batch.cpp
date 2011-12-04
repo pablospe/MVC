@@ -3,6 +3,8 @@
 #include "control.h"
 #include <sstream>
 
+using namespace std;
+
 void Batch::init(Patch p)
 {
 	char fileName[MAX_LINE];

@@ -6,7 +6,6 @@
 #include "patch.h"
 #include "geometry.h"
 
-
 // init calls
 int makeMenuSrc();
 int makeMenuDst();
@@ -18,32 +17,33 @@ void mouseClickSrc (int button, int state, int x, int y);
 void mouseClickDst (int button, int state, int x, int y);
 void motionSrc(int x, int y);
 
-void runBatch();
-void undoPoint();
-bool checkSource();
-
-static inline void checkStream (const istream& in)
-{
-	if (in.fail())
-	{
-		cerr << "Fatal error: stream failed!" << endl;
-		exit(-1);
-	}
-}
-/***
-void idle_func ();
-void process_func (int value);
-***/
-
 // menu calls
 void menuHelp ();
+void runBatch();
 
 void imageLoad(const char* filename, Window& w);
 void imageSave(const char* filename, Window& w);
 void imagePrint(Window& w);
 void imageRevert(Window& w);
 
+// Helper
+bool checkSource();
+void undoPoint();
 void initDiscreteClone();
 void initContinuousClone();
+
+static inline void checkStream (const std::istream& in)
+{
+	if (in.fail())
+	{
+		std::cerr << "Fatal error: stream failed!" << std::endl;
+		exit(-1);
+	}
+}
+
+static inline void endProcess()
+{
+	std::cout << "done!" << std::endl;
+}
 
 #endif // CONTROL_H

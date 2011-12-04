@@ -23,7 +23,7 @@ void composite(Point start)
 
 		destination.currentImg->setPixel_(targetPoint, result);
 	}
-	if (!destination.batch)	glutPostRedisplay();
+	glutPostRedisplay();
 }
 
 vector<double> meanValueCoordinates(Point pt)
@@ -51,6 +51,7 @@ double boundaryWeight(Point pt, int index)
 	Point previous;
 	Point next;
 
+	// Wrap-arounds for boundary indices
 	if (index == 0)
 		previous = source.patch.boundary[source.patch.boundary.size() - 1];
 	else
@@ -101,11 +102,4 @@ vector<Pixel> boundaryDiff(Point start)
 	}
 
 	return differences;
-}
-
-Point translate(Point oldOrigin, Point newOrigin, Point pt)
-{
-	Point delta = pt - oldOrigin;
-
-	return newOrigin + delta;
 }
