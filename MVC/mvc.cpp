@@ -103,3 +103,22 @@ vector<Pixel> boundaryDiff(Point start)
 
 	return differences;
 }
+
+vector<vector<Point> > boundaryHierarchy()
+{
+	vector<vector<Point> > hierarchy;
+	hierarchy.reserve(log(double(source.patch.boundary.size())) / log(double(2)));
+
+	hierarchy.push_back(source.patch.boundary);
+
+	while (hierarchy.back().size() >= 16) {
+		vector<Point> sublevel;
+		sublevel.reserve(log(double(hierarchy.back().size())) / log(double(2)));
+		for (size_t i = 0; i < hierarchy.back().size(); i += 2)
+			sublevel.push_back(hierarchy.back()[i]);
+
+		hierarchy.push_back(sublevel);
+	}
+
+	return hierarchy;
+}

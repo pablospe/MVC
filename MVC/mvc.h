@@ -13,6 +13,7 @@ void composite(Point start);
 std::vector<double> meanValueCoordinates(Point pt);
 std::vector<Point> targetBoundary(Point start);
 std::vector<Pixel> boundaryDiff(Point start);
+std::vector<std::vector<Point> > boundaryHierachy();
 double boundaryWeight(Point pt, int index);
 
 #endif
