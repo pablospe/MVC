@@ -183,7 +183,6 @@ void menuFunc (int value)
 		runBatch();
 		endProcess();
 		break;
-	
 	}
 }
 
@@ -255,15 +254,13 @@ void initContinuousClone()
 
 void keyboardFunc (unsigned char key, int x, int y)
 {
-	switch (key)
+	switch (tolower(key))
 	{
-	case 'H':
 	case 'h':
 		menuHelp();
 		break;
 		;;
 
-	case 'Q':
 	case 'q':
 		exit(0);
 		break;

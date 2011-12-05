@@ -9,6 +9,12 @@
 #include "mvc.h"
 #include "batch.h"
 
+/***
+ To DO
+ - incorporate boundary hierarchy
+   in mvc calculation
+***/
+
 extern Window source;
 extern Window destination;
 
