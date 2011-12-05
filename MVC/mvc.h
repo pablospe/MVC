@@ -21,6 +21,7 @@ public:
 private:
 	Point start;
 	std::vector<std::vector<Pixel> > history;
+	std::vector<std::vector<double> > meanValues;
 };
 
 #endif

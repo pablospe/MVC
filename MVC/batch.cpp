@@ -59,14 +59,13 @@ void Batch::prepareFiles(string& srcLoad, string& dstLoad, string& resultSave)
 	swap(resultSave, saveFileBase);
 }
 
-void Batch::run()
+void Batch::run(MVC& membrane)
 {
 	string srcLoad, dstLoad, resultSave;
 	prepareFiles(srcLoad, dstLoad, resultSave);
 
 	imageLoad(srcLoad.c_str(), source);
 	imageLoad(dstLoad.c_str(), destination);
-	MVC membrane(destination.pastePoint);
 	membrane.composite();
 	imageSave(resultSave.c_str(), destination);
 

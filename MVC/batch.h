@@ -12,7 +12,7 @@ public:
 	void prepareFiles(std::string& srcLoad, 
 					  std::string& dstLoad, 
 					  std::string& resultSave);
-	void run();
+	void run(MVC& membrane);
 
 private:
 	int srcCounter;

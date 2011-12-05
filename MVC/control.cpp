@@ -206,8 +206,10 @@ void runBatch()
 	cin >> frames;
 	checkStream(cin);
 
+	MVC membrane(destination.pastePoint);
+
 	for (size_t i = 0; i < frames; ++i)
-		bat.run();
+		bat.run(membrane);
 
 	source.batch = false;
 	destination.batch = false;

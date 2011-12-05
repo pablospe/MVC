@@ -7,6 +7,9 @@ MVC::MVC(Point Start)
 :	start(Start)
 {
 	history.reserve(8);
+	meanValues.reserve(source.patch.interior.size());
+	for (size_t i = 0; i < source.patch.interior.size(); ++i)
+		meanValues.push_back(meanValueCoordinates(source.patch.interior[i]));
 }
 
 void MVC::composite()
@@ -34,21 +37,19 @@ void MVC::composite()
 		Point sourcePoint = source.patch.interior[i];
 		Point targetPoint = translate(source.patch.boundary[0],start,sourcePoint);
 
-
-		vector<double> meanValues = meanValueCoordinates(sourcePoint);
-
-		assert(meanValues.size() ==  diff.size());
+		assert(meanValues[i].size() ==  diff.size());
 		
 		Pixel interpolant;
 		for (size_t j = 0; j < diff.size(); ++j)		
-			interpolant = interpolant + scale(diff[j], meanValues[j]);
+			interpolant = interpolant + scale(diff[j], meanValues[i][j]);
 		
 		double timeWeight = 1;
 		for (size_t j = 0; j < history.size(); ++ j) {
 			int dT =  history.size() - j + 1;
 			double weight = pow(double(dT), -0.75);
 			timeWeight += weight;
-
+			
+			// j-index is history; i-index is point in interior
 			interpolant = interpolant + scale(history[j][i], weight);
 		}
 
@@ -59,7 +60,6 @@ void MVC::composite()
 
 		membrane.push_back(interpolant);
 	}
-	
 	history.push_back(membrane);
 
 	glutPostRedisplay();
