@@ -205,7 +205,7 @@ void runBatch()
 	cin >> frames;
 	checkStream(cin);
 
-	MVC membrane(destination.pastePoint);
+	Membrane membrane(destination.pastePoint);
 
 	for (size_t i = 0; i < frames; ++i)
 		bat.run(membrane);
@@ -311,7 +311,7 @@ void mouseClickDst (int button, int state, int x, int y)
 {
 	if (destination.paste) {
 		destination.pastePoint = Point(x,y);
-		MVC membrane(Point(x,y));
+		Membrane membrane(Point(x,y));
 		membrane.composite();
 		destination.paste = false;
 		endProcess();

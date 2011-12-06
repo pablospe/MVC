@@ -6,9 +6,10 @@
 #include "patch.h"
 #include "geometry.h"
 
-class MVC {
+class Membrane {
 public:
-	MVC(Point Start);
+	typedef 
+	Membrane(Point Start);
 	// Top-level algorithm
 	void composite();
 

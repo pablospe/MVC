@@ -3,7 +3,7 @@
 
 using namespace std;
 
-MVC::MVC(Point Start)
+Membrane::Membrane(Point Start)
 :	start(Start)
 {
 	boundaryHierarchy();
@@ -14,7 +14,7 @@ MVC::MVC(Point Start)
 		meanValues.push_back(meanValueCoordinates(source.patch.interior[i]));
 }
 
-void MVC::composite()
+void Membrane::composite()
 {
 	/*** Code for testing boundary levels
 	for (size_t i = 0; i < hier.size(); ++i) {
@@ -30,8 +30,8 @@ void MVC::composite()
 
 	vector<Pixel> diff = boundaryDiff();
 
-	vector<Pixel> membrane;
-	membrane.reserve(source.patch.interior.size());
+	vector<Pixel> membraneValues;
+	membraneValues.reserve(source.patch.interior.size());
 	
 	for (size_t i = 0; i < source.patch.interior.size(); ++i) {
 		Point sourcePoint = source.patch.interior[i];
@@ -58,14 +58,14 @@ void MVC::composite()
 		Pixel result = interpolant + source.originalImg->getPixel_(sourcePoint);
 		destination.currentImg->setPixel_(targetPoint, result);
 
-		membrane.push_back(interpolant);
+		membraneValues.push_back(interpolant);
 	}
-	history.push_back(membrane);
+	history.push_back(membraneValues);
 
 	glutPostRedisplay();
 }
 
-vector<double> MVC::meanValueCoordinates(Point pt)
+vector<double> Membrane::meanValueCoordinates(Point pt)
 {
 	vector<double> values;
 	double total = 0;
@@ -84,7 +84,7 @@ vector<double> MVC::meanValueCoordinates(Point pt)
 	return values;
 }
 
-double MVC::boundaryWeight(Point pt, int index)
+double Membrane::boundaryWeight(Point pt, int index)
 {
 	Point current = source.patch.boundary[index];
 	Point previous;
@@ -115,7 +115,7 @@ double MVC::boundaryWeight(Point pt, int index)
 	return ((tHalfAngle0 + tHalfAngle1) / (distance));
 }
 
-vector<Point> MVC::targetBoundary()
+vector<Point> Membrane::targetBoundary()
 {
 	vector<Point> bounds;
 	for (size_t i = 0; i < source.patch.boundary.size(); ++i)
@@ -123,7 +123,7 @@ vector<Point> MVC::targetBoundary()
 	return bounds;
 }
 
-vector<Pixel> MVC::boundaryDiff()
+vector<Pixel> Membrane::boundaryDiff()
 {
 	vector<Pixel> differences;
 	vector<Point> targetBounds = targetBoundary();
@@ -143,7 +143,7 @@ vector<Pixel> MVC::boundaryDiff()
 	return differences;
 }
 
-void MVC::boundaryHierarchy()
+void Membrane::boundaryHierarchy()
 {
 	hierarchy.clear();
 	hierarchy.reserve(log(double(source.patch.boundary.size())) / log(double(2)));

@@ -59,7 +59,7 @@ void Batch::prepareFiles(string& srcLoad, string& dstLoad, string& resultSave)
 	swap(resultSave, saveFileBase);
 }
 
-void Batch::run(MVC& membrane)
+void Batch::run(Membrane& membrane)
 {
 	string srcLoad, dstLoad, resultSave;
 	prepareFiles(srcLoad, dstLoad, resultSave);
