@@ -1,4 +1,4 @@
-#include "mvc.h"
+#include "membrane.h"
 #include "main.h"
 
 using namespace std;
@@ -37,11 +37,11 @@ void Membrane::composite()
 		Point sourcePoint = source.patch.interior[i];
 		Point targetPoint = translate(source.patch.boundary[0],start,sourcePoint);
 
-		assert(meanValues[i].size() ==  diff.size());
+		assert(meanValues[i].size() ==  diff.size()); // .first.
 		
 		Pixel interpolant;
 		for (size_t j = 0; j < diff.size(); ++j)		
-			interpolant = interpolant + scale(diff[j], meanValues[i][j]);
+			interpolant = interpolant + scale(diff[j], meanValues[i][j]); // .first.
 		
 		double timeWeight = 1;
 		for (size_t j = 0; j < history.size(); ++ j) {
@@ -65,21 +65,23 @@ void Membrane::composite()
 	glutPostRedisplay();
 }
 
+//MVC Membrane::meanValueCoordinates(Point pt)
 vector<double> Membrane::meanValueCoordinates(Point pt)
 {
+	// MVC values;
 	vector<double> values;
 	double total = 0;
 	for (size_t i = 0; i < source.patch.boundary.size(); ++i) {
 		double weight = boundaryWeight(pt,i);
 		total += weight;
-		values.push_back(weight);
+		values.push_back(weight); //.first.
 	}
 
 	if (total == 0)
 		total = 1;
 
 	for (size_t i = 0; i < values.size(); ++i)
-		values[i] = values[i] / total;
+		values[i] = values[i] / total; // .first.
 
 	return values;
 }

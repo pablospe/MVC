@@ -6,7 +6,7 @@
 #include "image.h"
 #include "patch.h"
 #include "geometry.h"
-#include "mvc.h"
+#include "membrane.h"
 #include "batch.h"
 
 /***
