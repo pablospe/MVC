@@ -6,6 +6,8 @@ using namespace std;
 MVC::MVC(Point Start)
 :	start(Start)
 {
+	boundaryHierarchy();
+
 	history.reserve(8);
 	meanValues.reserve(source.patch.interior.size());
 	for (size_t i = 0; i < source.patch.interior.size(); ++i)
@@ -14,8 +16,6 @@ MVC::MVC(Point Start)
 
 void MVC::composite()
 {
-	vector<vector<Point> > hier = boundaryHierarchy();
-
 	/*** Code for testing boundary levels
 	for (size_t i = 0; i < hier.size(); ++i) {
 		for (size_t j = 0; j < hier[i].size(); ++j) {
@@ -143,9 +143,9 @@ vector<Pixel> MVC::boundaryDiff()
 	return differences;
 }
 
-vector<vector<Point> > MVC::boundaryHierarchy()
+void MVC::boundaryHierarchy()
 {
-	vector<vector<Point> > hierarchy;
+	hierarchy.clear();
 	hierarchy.reserve(log(double(source.patch.boundary.size())) / log(double(2)));
 
 	hierarchy.push_back(source.patch.boundary);
@@ -158,6 +158,4 @@ vector<vector<Point> > MVC::boundaryHierarchy()
 
 		hierarchy.push_back(sublevel);
 	}
-
-	return hierarchy;
 }

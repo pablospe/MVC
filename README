@@ -1,8 +1,21 @@
 Created by Julius Elinson
 
-Implementation of ''Coordinates for Mean-Value Cloning'' by Farbman et al. (2009) for Computer Graphics (CS 155) at Harvey Mudd College.
+Implementation of ''Coordinates for Mean-Value Cloning'' by Farbman et al. 
+(2009) for Computer Graphics (CS 155) at Harvey Mudd College.
 
-To run, all source files should be added to a Microsoft Visual Studio C++ empty console project.
+To run, all source files should be added to a Microsoft Visual Studio C++ 
+empty console project.
 
-Image files must be Windows bitmap files (.bmp) with 1-3 channels and at most 8-bits per channel.
+Image files must be Windows bitmap files (.bmp) with 1-3 channels and at 
+most 8-bits per channel.
 
+
+Implementation notes for using hierarchical boundary sampling:
+-computation of interpolant requires knowing exactly which
+ vertices in the boundary are present in the vector of mvc's
+-mvc's should really consist not just of a vector of doubles
+ but also the indices of the corresponding vertices in the 
+ boundary vector
+-typedef a mvc's as a pairing of such, or make it its own class
+-modify composite to run through each interior point's mvc set of indices
+ for differences in boundary (thus one single boundary difference vector)

@@ -69,6 +69,7 @@ int makeMenuDst ()
 
 	int clone = glutCreateMenu(menuFunc);
 	glutAddMenuEntry( "Paste Patch", M_DST_PASTE);
+	glutAddMenuEntry( "Clear Pasted Patch", M_DST_REVERT);
 
 	int batch = glutCreateMenu(menuFunc);
 	glutAddMenuEntry( "Run", M_BATCH_INIT);
@@ -88,7 +89,6 @@ int makeMenuDst ()
 
 void menuFunc (int value)
 {
-	// variables used in the switch statement
 	char filename[MAX_LINE];
 
 	switch (value)
