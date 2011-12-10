@@ -37,12 +37,12 @@ void Membrane::composite()
 		Point sourcePoint = source.patch.interior[i];
 		Point targetPoint = translate(source.patch.boundary[0],start,sourcePoint);
 
-		assert(meanValues[i].size() ==  diff.size()); // .first.
+		assert(meanValues[i].first.size() ==  diff.size()); // .first.
 		
 		Pixel interpolant;
 		for (size_t j = 0; j < diff.size(); ++j)		
-			interpolant = interpolant + scale(diff[j], meanValues[i][j]); // .first.
-		
+			interpolant = interpolant + scale(diff[j], meanValues[i].first[j]); // .first.
+	
 		double timeWeight = 1;
 		for (size_t j = 0; j < history.size(); ++ j) {
 			int dT =  history.size() - j + 1;
@@ -65,23 +65,23 @@ void Membrane::composite()
 	glutPostRedisplay();
 }
 
-//MVC Membrane::meanValueCoordinates(Point pt)
-vector<double> Membrane::meanValueCoordinates(Point pt)
+//vector<double> Membrane::meanValueCoordinates(Point pt)
+Membrane::MVC Membrane::meanValueCoordinates(Point pt)
 {
-	// MVC values;
-	vector<double> values;
+	MVC values;
+	//vector<double> values;
 	double total = 0;
 	for (size_t i = 0; i < source.patch.boundary.size(); ++i) {
 		double weight = boundaryWeight(pt,i);
 		total += weight;
-		values.push_back(weight); //.first.
+		values.first.push_back(weight); //.first.
 	}
 
 	if (total == 0)
 		total = 1;
 
-	for (size_t i = 0; i < values.size(); ++i)
-		values[i] = values[i] / total; // .first.
+	for (size_t i = 0; i < values.first.size(); ++i)
+		values.first[i] = values.first[i] / total; // .first.
 
 	return values;
 }

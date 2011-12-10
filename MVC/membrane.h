@@ -14,8 +14,8 @@ public:
 	void composite();
 
 	// Helper functions
-	std::vector<double> meanValueCoordinates(Point pt);
-	//MVC meanValueCoordinates(Point pt);
+	//std::vector<double> meanValueCoordinates(Point pt);
+	MVC meanValueCoordinates(Point pt);
 	std::vector<Point> targetBoundary();
 	std::vector<Pixel> boundaryDiff();
 	void boundaryHierarchy();
@@ -23,8 +23,8 @@ public:
 private:
 	Point start;
 	std::vector<std::vector<Pixel> > history;
-	std::vector<std::vector<double> > meanValues;
-	// std::vector<MVC> meanValues;
+	//std::vector<std::vector<double> > meanValues;
+	std::vector<MVC> meanValues;
 	std::vector<std::vector<Point> > hierarchy;
 };
 
