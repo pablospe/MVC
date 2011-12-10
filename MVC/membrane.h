@@ -14,6 +14,9 @@ public:
 	// Top-level algorithm
 	void composite();
 
+	// For comparison
+	void naiveComposite();
+
 private:
 	// Helper functions
 	Mvc meanValueCoordinates(Point pt);

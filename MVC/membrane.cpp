@@ -71,6 +71,17 @@ void Membrane::composite()
 	glutPostRedisplay();
 }
 
+void Membrane::naiveComposite()
+{
+	for (size_t i = 0; i < interior->size(); ++i) {
+		Point sourcePoint = (*interior)[i];
+		Point targetPoint = translate((*boundary)[0],start,sourcePoint);
+
+		destination.currentImg->setPixel_(targetPoint, source.originalImg->getPixel_(sourcePoint));
+	}
+	glutPostRedisplay();
+}
+
 // Helper functions
 double Membrane::boundaryWeight(Point pt, int localIndex, vector<size_t>& refBoundary)
 {

@@ -25,8 +25,9 @@ enum {
 	M_SRC_DCLONE = 12,
 
 	M_DST_PASTE = 13,
+	M_DST_PASTE_NAIVE = 14,
 
-	M_BATCH_INIT = 14,
+	M_BATCH_INIT = 15,
 
 	M_LAST_ENUM
 } MENU_ITEMS;
@@ -69,6 +70,7 @@ int makeMenuDst ()
 
 	int clone = glutCreateMenu(menuFunc);
 	glutAddMenuEntry( "Paste Patch", M_DST_PASTE);
+	glutAddMenuEntry( "Naive Paste", M_DST_PASTE_NAIVE);
 	glutAddMenuEntry( "Clear Pasted Patch", M_DST_REVERT);
 
 	int batch = glutCreateMenu(menuFunc);
@@ -173,6 +175,14 @@ void menuFunc (int value)
 	// Pasting
 	case M_DST_PASTE:
 		destination.paste = true;
+		destination.naive = false;
+		cout << "Click on the point that will correspond ";
+		cout << "to first point in source patch" << endl;
+		break;
+
+	case M_DST_PASTE_NAIVE: 
+		destination.naive = true;
+		destination.paste = false;
 		cout << "Click on the point that will correspond ";
 		cout << "to first point in source patch" << endl;
 		break;
@@ -231,11 +241,17 @@ void mouseClickSrc (int button, int state, int x, int y)
 
 void mouseClickDst (int button, int state, int x, int y)
 {
-	if (destination.paste) {
+	if (destination.paste || destination.naive) {
 		destination.pastePoint = Point(x,y);
 		Membrane membrane(Point(x,y));
-		membrane.composite();
-		destination.paste = false;
+		if (destination.paste) {
+			membrane.composite();
+			destination.paste = false;
+		}
+		if (destination.naive) {
+			membrane.naiveComposite();
+			destination.naive = false;
+		}
 		endProcess();
 	}
 }

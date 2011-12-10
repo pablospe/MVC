@@ -11,8 +11,6 @@
 
 /***
  To DO
- - highlight first point of patch
- - option for plain vanilla composite
  - wiki log
 ***/
 

@@ -14,7 +14,6 @@ public:
 	bool empty();
 	bool addPoint(Point& vertex);
 
-	void highLight();
 	void clear();
 	void closed();
 
@@ -34,6 +33,7 @@ private:
 	void addPointHelper(Point& vertex);
 	void computeRows();
 	void computeInterior();
+	void colorFirstPoint();
 	void fillBoundary();
 	void fillLine(Point pt1, Point pt2, std::vector<Point>& border);
 
@@ -62,7 +62,7 @@ public:
 	Patch	patch;
 	int		height, width;
 	int		glNum;
-	bool	dClone, cClone, paste, batch;
+	bool	dClone, cClone, paste, naive, batch;
 	Image*	currentImg;
 	Image*	originalImg;
 };

@@ -175,14 +175,20 @@ void Patch::fillLine(Point pt1, Point pt2, vector<Point>& border)
 		border.insert(border.end(), tempBorder.begin(), tempBorder.end()-1);
 }
 
-
-void Patch::highLight()
+void Patch::colorFirstPoint()
 {
-	for (size_t i = 0; i < boundary.size(); ++i)
-		for (int chn = RED; chn <= BLUE; ++chn)
-			currImg->setPixel_(boundary[i],chn,1);
+	Point first = boundary.front();
+	source.currentImg->setPixel_(first,Pixel(1,1,0));
+	source.currentImg->setPixel_(first.x,first.y + 1,Pixel(1,1,0));
+	source.currentImg->setPixel_(first.x + 1,first.y,Pixel(1,1,0));
+	source.currentImg->setPixel_(first.x - 1,first.y,Pixel(1,1,0));
+	source.currentImg->setPixel_(first.x,first.y - 1,Pixel(1,1,0));
+	source.currentImg->setPixel_(first.x - 1,first.y - 1,Pixel(1,1,0));
+	source.currentImg->setPixel_(first.x + 1,first.y + 1,Pixel(1,1,0));
+	source.currentImg->setPixel_(first.x + 1,first.y - 1,Pixel(1,1,0));
+	source.currentImg->setPixel_(first.x - 1,first.y + 1,Pixel(1,1,0));
+	glutPostRedisplay();
 }
-
 
 void Patch::clear()
 {
@@ -198,11 +204,12 @@ void Patch::clear()
 
 void Patch::closed()
 {
-	cout << "Patch is closed" << endl;
+	cout << "Patch is closed. The yellow point indicates the start of the patch for cloning." << endl;
 	fillBoundary();
 	computeInterior();
 	source.cClone = false;
 	source.dClone = false;
+	colorFirstPoint();
 	glutPostRedisplay();
 }
 
@@ -299,7 +306,7 @@ bool Patch::checkRow(int x, int y, vector<int>& yBoundary)
 
 Window::Window()
 :	height(300),width(300),glNum(0),
-	dClone(false),cClone(false),paste(false),batch(false),
+	dClone(false),cClone(false),paste(false),naive(false),batch(false),
 	currentImg(NULL), originalImg(NULL)
 {
 	pastePoint.x = -1;
