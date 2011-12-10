@@ -35,7 +35,7 @@ void Membrane::composite()
 	membraneValues.reserve(source.patch.interior.size());
 	
 	for (size_t i = 0; i < source.patch.interior.size(); ++i) {
-		cout << "interior in" << endl;
+		//cout << "interior in" << endl;
 		Point sourcePoint = source.patch.interior[i];
 		Point targetPoint = translate(source.patch.boundary[0],start,sourcePoint);
 		
@@ -63,98 +63,11 @@ void Membrane::composite()
 		destination.currentImg->setPixel_(targetPoint, result);
 
 		membraneValues.push_back(interpolant);
-		cout << "interior out" << endl;
+		//cout << "interior out" << endl;
 	}
 	history.push_back(membraneValues);
 
 	glutPostRedisplay();
-}
-
-int Membrane::wrap(int index)
-{
-	cout << "wrap in" << endl;
-	int result;
-	if (index >= int(hierarchy[0].size()))
-		result = index - hierarchy[0].size();
-	else if (index < 0)
-		result = index + hierarchy[0].size();
-	else
-		result = index;
-	assert(result >= 0 && result < int(hierarchy[0].size()));
-	cout << "wrap out " << endl;
-	return result;
-}
-
-void Membrane::buildBoundary(Point pt, int index, int step, int level, vector<int>& refBoundary)
-{
-	cout << "build in" << endl;
-	if (step == 1) {
-		refBoundary.push_back(wrap(index));
-	}
-
-	else if (refinedEnough(pt, hierarchy[0][wrap(index)], hierarchy[0][wrap(index + step)], hierarchy[0][wrap(index - step)],level)) {
-		refBoundary.push_back(index);
-		cout << "enough" << endl;
-	}
-	
-	else {
-		step /= 2;
-		buildBoundary(pt,index - step, step, level-1, refBoundary);
-		buildBoundary(pt,index, step, level-1, refBoundary);
-		buildBoundary(pt,index + step, step, level-1, refBoundary);
-	}
-	cout << "build out" << endl;
-}
-
-vector<int> Membrane::refinedBoundary(Point pt)
-{
-	cout << "refined in" << endl;
-	vector<int> refBoundary;
-	int totalLevels = hierarchy.size();
-	int step = pow(double(2), double(totalLevels - 1));
-	for (size_t i = 0; i < hierarchy[0].size(); i+=step) {
-		assert(i < hierarchy[0].size());
-		buildBoundary(pt,i,step,0,refBoundary);
-	}
-	cout << "refined out" << endl;
-	return refBoundary;
-}
-
-bool Membrane::refinedEnough(Point pt, Point vertex, Point next, Point prev, int level)
-{
-	double epsilonDist = double(hierarchy[0].size()) / double(16 * pow(2.5, level));
-	double epsilonAngle = .75 * pow(.8, level);
-
-	return (dist(pt, vertex)			> epsilonDist 
-			&& angle(pt, prev, vertex)	< epsilonAngle 
-			&& angle(pt, next, vertex)	< epsilonAngle);
-}
-
-Membrane::MVC Membrane::meanValueCoordinates(Point pt)
-{
-	cout << "mvc in" << endl;
-	MVC values;
-	double total = 0;
-	vector<int> refBoundary = refinedBoundary(pt);
-
-	for (size_t i = 0; i < refBoundary.size(); ++i) {
-		assert(refBoundary[i] < hierarchy[0].size());
-		double weight = boundaryWeight(pt,refBoundary[i]);
-		total += weight;
-		values.first.push_back(weight);
-		values.second.push_back(refBoundary[i]);
-	}
-
-	assert(values.first.size() == values.second.size());
-
-	if (total == 0)
-		total = 1;
-
-	for (size_t i = 0; i < values.first.size(); ++i)
-		values.first[i] = values.first[i] / total; 
-
-	cout << "mvc out" << endl;
-	return values;
 }
 
 double Membrane::boundaryWeight(Point pt, int index)
@@ -231,4 +144,94 @@ void Membrane::boundaryHierarchy()
 
 		hierarchy.push_back(sublevel);
 	}
+}
+
+////////////////////////////////////////////
+
+int Membrane::wrap(int index)
+{
+	int result;
+	if (index >= int(hierarchy[0].size()))
+		result = index - hierarchy[0].size();
+	else if (index < 0)
+		result = index + hierarchy[0].size();
+	else
+		result = index;
+	return result;
+}
+
+void Membrane::buildBoundary(Point pt, int index, int step, int level, vector<int>& refBoundary)
+{
+	//cout << "build in" << endl;
+	if (step == 1) {
+		refBoundary.push_back(wrap(index));
+	}
+
+	else if (refinedEnough(pt, hierarchy[0][wrap(index)], hierarchy[0][wrap(index + step)], hierarchy[0][wrap(index - step)],level)) {
+		refBoundary.push_back(wrap(index));
+		//cout << "enough" << endl;
+	}
+	
+	else {
+		step /= 2;
+		buildBoundary(pt,index - step, step, level-1, refBoundary);
+		buildBoundary(pt,index, step, level-1, refBoundary);
+		//buildBoundary(pt,index + step, step, level-1, refBoundary);
+	}
+	//cout << "build out" << endl;
+}
+
+vector<int> Membrane::refinedBoundary(Point pt)
+{
+	//cout << "refined in" << endl;
+	
+	vector<int> refBoundary;
+	int totalLevels = hierarchy.size();
+	int step = pow(double(2), double(totalLevels - 1));
+
+	for (size_t i = 0; i < hierarchy[0].size(); i+=step) {
+		assert(i < hierarchy[0].size());
+		buildBoundary(pt,i,step,0,refBoundary);
+	}
+	///cout << "refined out" << endl;
+	return refBoundary;
+}
+
+bool Membrane::refinedEnough(Point pt, Point vertex, Point next, Point prev, int level)
+{
+	double epsilonDist = double(hierarchy[0].size()) / double(16 * pow(2.5, level));
+	double epsilonAngle = .75 * pow(.8, level);
+
+	//return false;
+
+	return (dist(pt, vertex)			> epsilonDist 
+			&& angle(pt, prev, vertex)	< epsilonAngle 
+			&& angle(pt, next, vertex)	< epsilonAngle);
+}
+
+Membrane::MVC Membrane::meanValueCoordinates(Point pt)
+{
+	//cout << "mvc in" << endl;
+	MVC values;
+	double total = 0;
+	vector<int> refBoundary = refinedBoundary(pt);
+
+	for (size_t i = 0; i < refBoundary.size(); ++i) {
+		assert(refBoundary[i] < hierarchy[0].size());
+		double weight = boundaryWeight(pt,refBoundary[i]);
+		total += weight;
+		values.first.push_back(weight);
+		values.second.push_back(refBoundary[i]);
+	}
+
+	assert(values.first.size() == values.second.size());
+
+	if (total == 0)
+		total = 1;
+
+	for (size_t i = 0; i < values.first.size(); ++i)
+		values.first[i] = values.first[i] / total; 
+
+	//cout << "mvc out" << endl;
+	return values;
 }
