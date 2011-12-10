@@ -6,7 +6,7 @@ using namespace std;
 
 Patch::Patch()
 :	origImg(NULL),currImg(NULL),
-	img_width(0), img_height(0),
+	imgWidth(0), imgHeight(0),
 	lowX(0), lowY(0), highX(0), highY(0)
 {
 	boundary.clear();
@@ -17,12 +17,47 @@ Patch::Patch()
 void Patch::init(Image* imgOrig, Image* imgCurr)
 {
 	origImg = imgOrig ; currImg = imgCurr;
-	img_width = imgOrig->getWidth();
-	img_height = imgOrig->getHeight();
+	imgWidth = imgOrig->getWidth();
+	imgHeight = imgOrig->getHeight();
 	lowX = 0; lowY = 0; highX = 0; highY = 0;
 	boundary.clear();
 	interior.clear();
 	rows.clear();
+}
+
+void Patch::setOrigImg(Image* newOrigImg)
+{
+	origImg = newOrigImg;
+}
+
+void Patch::setCurrImg(Image* newCurrImg)
+{
+	currImg = newCurrImg;
+}
+
+void Patch::setImgWidth(int width)
+{
+	imgWidth = width;
+}
+
+void Patch::setImgHeight(int height)
+{
+	imgHeight = height;
+}
+
+size_t Patch::boundarySize()
+{
+	return boundary.size();
+}
+
+void Patch::removeLastBoundary()
+{
+	boundary.pop_back();
+}
+
+Point Patch::lastBoundary()
+{
+	return boundary.back();
 }
 
 void Patch::addPointHelper(Point& vertex)
@@ -202,8 +237,8 @@ void Patch::computeInterior()
 				currImg->setPixel_(x,y,Pixel());
 		}
 	}
-	for (int x = 0; x < img_width; ++x)
-		for (int y = 0; y < img_height; ++y)
+	for (int x = 0; x < imgWidth; ++x)
+		for (int y = 0; y < imgHeight; ++y)
 			if (x < lowX || x > highX || y < lowY || y > highY)
 				currImg->setPixel_(x,y,Pixel());
 }
@@ -276,8 +311,8 @@ void Window::update()
 	height = currentImg->getHeight();
 	width = currentImg->getWidth();
 
-	patch.currImg = currentImg;
-	patch.origImg = originalImg;
-	patch.img_height = height;
-	patch.img_width = width;
+	patch.setCurrImg(currentImg);
+	patch.setOrigImg(originalImg);
+	patch.setImgHeight(height);
+	patch.setImgWidth(width);
 }

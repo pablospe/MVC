@@ -32,6 +32,8 @@ void undoPoint();
 void initDiscreteClone();
 void initContinuousClone();
 
+void welcomeMessage();
+
 static inline void checkStream (const std::istream& in)
 {
 	if (in.fail())

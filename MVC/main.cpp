@@ -11,6 +11,8 @@ Window destination;
 
 int main(int argc, char** argv)
 {
+	welcomeMessage();
+	cout << "Press 'h' for help\n\n";
 	// set up the window
 	glutInit(&argc, &argv[0]); 
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);

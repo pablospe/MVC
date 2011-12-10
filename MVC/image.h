@@ -6,7 +6,7 @@ class Image;
 #include <fstream>
 #include "common.h"
 
-#define RED	0
+#define RED		0
 #define GREEN	1
 #define BLUE	2
 

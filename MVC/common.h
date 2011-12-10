@@ -11,8 +11,6 @@
 
 class Image;
 
-// constants
-
 #define EPSILON         1e-5
 #define MAX_LINE        1024
 #define MAX_PATH        1024
@@ -42,11 +40,5 @@ class Image;
 			)
 
 #define sign(x)         ((x)<0?-1:1)
-
-/***
-// stl defs for convenience
-#define VECTOR(t)		std::vector < t >
-#define MAP(s,t)		std::map < s, t >
-***/
 
 #endif // COMMON_H

@@ -30,6 +30,5 @@ double angle(Point ref, Point a, Point b)
 Point translate(Point oldOrigin, Point newOrigin, Point pt)
 {
 	Point delta = pt - oldOrigin;
-
 	return newOrigin + delta;
 }

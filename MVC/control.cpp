@@ -5,6 +5,7 @@
 
 using namespace std;
 
+// Menu & Interface
 enum {
 	M_QUIT = 0,
 	M_HELP = 1,
@@ -29,7 +30,6 @@ enum {
 
 	M_LAST_ENUM
 } MENU_ITEMS;
-
 
 int makeMenuSrc ()
 {
@@ -85,7 +85,6 @@ int makeMenuDst ()
 
 	return main;
 }
-
 
 void menuFunc (int value)
 {
@@ -186,72 +185,6 @@ void menuFunc (int value)
 	}
 }
 
-
-void runBatch()
-{
-	if (source.currentImg == NULL || source.patch.empty() || !destination.pastePoint.valid()) {
-		cerr << "You must first select a patch in the current source image and a point to paste in the current target image" << endl;
-		return;
-	}
-
-	source.batch = true;
-	destination.batch = true;
-
-	Batch bat;
-	bat.init(source.patch);
-
-	size_t frames;
-	cout << "Enter the number of frames to clone over: ";
-	cin >> frames;
-	checkStream(cin);
-
-	Membrane membrane(destination.pastePoint);
-
-	for (size_t i = 0; i < frames; ++i)
-		bat.run(membrane);
-
-	source.batch = false;
-	destination.batch = false;
-
-	// Load last frame
-	glutPostRedisplay();
-}
-
-bool checkSource()
-{
-	return (source.originalImg == NULL || source.currentImg == NULL ||
-			source.originalImg->bad()  || source.currentImg->bad());
-}
-
-void initDiscreteClone()
-{
-	if (checkSource()) {
-		cerr << "No image!" << endl; return;
-	}
-
-	cout << "Select vertices of patch. ";
-	cout << "The polygon must not intersect itself. ";
-	cout << "Close patch by selecting a pixel close to the original pixel or press 'c'. ";
-	cout << "Undo a point by pressing 'z'." << endl;
-
-	source.patch.clear();
-	source.dClone = true;
-}
-
-void initContinuousClone()
-{
-	if (checkSource()) {
-		cerr << "No image!" << endl; return; 
-	}
-
-	cout << "Click and hold mouse to trace patch. ";
-	cout << "The polygon must not intersect itself. ";
-	cout << "Close the patch by tracing back to the origin pixel or press 'c'." << endl;
-
-	source.patch.clear();
-	source.cClone = true;
-}
-
 void keyboardFunc (unsigned char key, int x, int y)
 {
 	switch (tolower(key))
@@ -271,21 +204,10 @@ void keyboardFunc (unsigned char key, int x, int y)
 		break;
 
 	case 'c':
-		if (source.patch.boundary.size() >= 3)
+		if ((source.dClone || source.cClone) && source.patch.boundarySize() >= 3)
 			source.patch.closed();
 		break;
 
-	}
-}
-
-void undoPoint()
-{
-	if (source.dClone) {
-		Point last = source.patch.boundary.back();
-		source.currentImg->setPixel_(last,source.originalImg->getPixel_(last));
-		source.patch.boundary.pop_back();
-		cout << "Removing point at: " << last << endl;
-		glutPostRedisplay();
 	}
 }
 
@@ -324,7 +246,7 @@ void motionSrc(int x, int y)
 
 		Point vertex(x,y);
 
-		if (source.patch.boundary.size() > 10 && source.patch.addPoint(vertex))
+		if (source.patch.boundarySize() > 10 && source.patch.addPoint(vertex))
 			source.patch.closed();
 
 		else
@@ -337,12 +259,36 @@ void motionSrc(int x, int y)
 	}
 }
 
-void menuHelp ()
+void welcomeMessage()
 {
-	cout << "not implemented yet" << endl;
+	cout << "\n---------------------------------------------------------\n";
+	cout << "|\t Welcome To MVC - For All Your Cloning Needs!\t|\n"; 
+	cout << "---------------------------------------------------------\n\n";
 }
 
+void menuHelp ()
+{
+	cout << "Instructions:\n\n";
+	cout << "Use the right-click button on either window to load .bmp images. ";
+	cout << "Once both windows have been loaded with images, ";
+	cout << "to clone from the source window to the target window ";
+	cout << "you can use a discrete or continuous outline.\n\n";
 
+	cout << "The discrete outline allows you to select a few vertices ";
+	cout << "and the rest of the boundary will be linearly interpolated. " ;
+	cout << "The continuous outline allows you to simply trace the patch ";
+	cout << "you wish to clone.\n\n";
+
+	cout << "To close the patch, either select the original point again ";
+	cout << "or press 'c' and a boundary between the first and last points ";
+	cout << "will be linearly interpolated.\n\n";
+
+	cout << "Paste the patch by selecting the option from the target window menu ";
+	cout << "and then select the pixel that will correspond to the first pixel ";
+	cout << "selected in the source patch.";
+}
+
+// General I/O
 void imageLoad (const char* filename, Window& w)
 {
 	if (w.currentImg)
@@ -412,7 +358,7 @@ void imagePrint (Window& w)
 
 void imageRevert (Window& w)
 {
-	if (w.patch.boundary.size() != 0)
+	if (w.patch.boundarySize() != 0)
 		w.patch.clear();
 
 	if (w.currentImg)
@@ -436,3 +382,80 @@ void imageRevert (Window& w)
 	glutPostRedisplay();
 }  
 
+// Batch cloning
+void runBatch()
+{
+	if (source.currentImg == NULL || source.patch.empty() || !destination.pastePoint.valid()) {
+		cerr << "You must first select a patch in the current source image and a point to paste in the current target image" << endl;
+		return;
+	}
+
+	source.batch = true;
+	destination.batch = true;
+
+	Batch bat;
+	bat.init(source.patch);
+
+	size_t frames;
+	cout << "Enter the number of frames to clone over: ";
+	cin >> frames;
+	checkStream(cin);
+
+	Membrane membrane(destination.pastePoint);
+
+	for (size_t i = 0; i < frames; ++i)
+		bat.run(membrane);
+
+	source.batch = false;
+	destination.batch = false;
+
+	// Load last frame
+	glutPostRedisplay();
+}
+
+bool checkSource()
+{
+	return (source.originalImg == NULL || source.currentImg == NULL ||
+			source.originalImg->bad()  || source.currentImg->bad());
+}
+
+// Cloning
+void initDiscreteClone()
+{
+	if (checkSource()) {
+		cerr << "No image!" << endl; return;
+	}
+
+	cout << "Select vertices of patch. ";
+	cout << "The polygon must not intersect itself. ";
+	cout << "Close patch by selecting a pixel close to the original pixel or press 'c'. ";
+	cout << "Undo a point by pressing 'z'." << endl;
+
+	source.patch.clear();
+	source.dClone = true;
+}
+
+void initContinuousClone()
+{
+	if (checkSource()) {
+		cerr << "No image!" << endl; return; 
+	}
+
+	cout << "Click and hold mouse to trace patch. ";
+	cout << "The polygon must not intersect itself. ";
+	cout << "Close the patch by tracing back to the origin pixel or press 'c'." << endl;
+
+	source.patch.clear();
+	source.cClone = true;
+}
+
+void undoPoint()
+{
+	if (source.dClone) {
+		Point last = source.patch.lastBoundary();
+		source.currentImg->setPixel_(last,source.originalImg->getPixel_(last));
+		source.patch.removeLastBoundary();
+		cout << "Removing point at: " << last << endl;
+		glutPostRedisplay();
+	}
+}

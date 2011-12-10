@@ -9,12 +9,14 @@
 class Batch {
 public:
 	void init(Patch p);
-	void prepareFiles(std::string& srcLoad, 
-					  std::string& dstLoad, 
-					  std::string& resultSave);
 	void run(Membrane& membrane);
 
 private:
+	void prepareFiles(std::string& srcLoad, 
+					  std::string& dstLoad, 
+					  std::string& resultSave);
+
+	// Data members;
 	int srcCounter;
 	int dstCounter;
 	int saveCounter;

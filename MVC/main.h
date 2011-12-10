@@ -11,8 +11,9 @@
 
 /***
  To DO
- - incorporate boundary hierarchy
-   in mvc calculation
+ - highlight first point of patch
+ - option for plain vanilla composite
+ - wiki log
 ***/
 
 extern Window source;
