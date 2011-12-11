@@ -1,0 +1,71 @@
+<html>
+    <body>
+        <h1> CS 155 Project 4 Write-up </h1>
+        <h4> Author: Julius Elinson </h4>
+        <hr noshade size=4>
+        
+        <h2> Overview of Project </h2>
+        I implemented the algorithm presented by Farbman et al. in "Coordinates for Instant Image Cloning" (2009). It intelligently generates a mask-like membrane
+        for a user-specified patch from a source image to clone to a destination images. My implementation offers a simple user-interface, efficient cloning using 
+        hierarchical boundary optimization and the ability to do batch cloning for video stills.
+        
+        <hr noshade size=2>
+        <h2> User Interface </h2>
+        <h3> I/O </h3>
+        <p> Upon launching the program, two windows appear, one labeled "Source" and one labeled "Target." Using the right-click, each window
+        can be loaded with a .bmp image. Each window saves, reverts and prints file info independently. A help menu is accesible by both
+        the right-click menu and by pressing 'h' on either window.
+        </p>
+        <h3> Selecting A Source Patch</h3>
+        <p> One a source image has been loaded, using the right-click menu on the source window, under "Clone" a user can select either "Outline Patch" or 
+        "Trace Patch." The former option allows the user to discretely select a few of the boundary points using the left-click and then the rest of the boundary
+        is linearly interpolated. In this mode, a user can press 'z' to undo the last point. The tracing option lets the user left-click, hold and drag around the 
+        patch they wish to clone.
+        </p>
+        <p> In either cloning technique, once a boundary vertex has been added that is sufficiently close to the original vertex, the patch will
+        close and the interior of the image will automatically be computed, blacking out the rest of the image. While selecting the boundary,
+        if the user wants to automatically close the patch, they can press 'c' and the first vertex will be connected to the last vertex to be
+        addded. Note that patchs must be simple (non-intersecting) and convex for correct calculation of interior points.
+        </p>
+        <p> If the user is unsatisfied with the patch area, using the menu, under "Clone" they can select to clear the patch and the image will
+        be reverted.
+        </p> 
+        
+        <h3> Cloning Source Patch </h3>
+        <p> Once a source patch has been selected and a target image has been loaded, the user can paste the patch and perform the cloning. To do so,
+        using the right-click menu on the target window, under "Clone" select "Paste Patch." Then using the mouse, left-click the point on the target
+        image which will correspond to the first point in the source patch (highlighted by a yellow square). A user can do this on a target image as many times
+        as they want or they can remove the pasted images by clicking on "Clear Pasted Patch" under "Clone" in the menu. Additionally, for comparison,
+        the user can directly paste the original source image by choosing "Naive Paste Patch" in the menu. This will simply copy the pixel images
+        from the source and directly replace the correspond pixels in the target image. This feature was implemented to allow a user
+        to observe the changes in cloning that the algorithm offers.
+        </p>
+         <hr noshade size=2>
+        <h2> Implementation </h2>
+        <h3> Basic Algorithm </h3>
+        <p> The implementation directly follows the algorithm described by Farbman et al. The Image class from the image processor assignment
+        is used as the basic data structure for images. Additional classes created include Patch, Window, and the wrapper class Membrane for the main
+        algorithm. Some additional preliminary steps that were implemented but not detailed in the paper include the Bresenham algorithm for creating
+        a complete boundary and a basic techinque for computing polygon interior points. 
+        </p>
+        <h3> Optimizations </h3>
+        <p> The program implements one of the two optimizations offered by Farbman et al. It uses hierarchical boundary sampling when computing
+        mean-value coordiantes, since boundary points further from an interior point have less of an influence on the resulting interpolant value.
+        This was implemented by recursively going through levels of downsampled boundaries. This noticeably reduced the run-time. 
+        </p>
+        <h3> Video Cloning </h3>
+        <p>
+        After selecting a source patch and cloning location on the target window, a user can clone over a sequence of images by selecting "Run" under "Batch" 
+        in the menu for either window. The user will then be prompted for information regarding the file name prefixes for both the source and target,
+        the starting indices for each, the prefix for the resulting file, and lastly the number of frames to clone over. As described by Farbman et al., in 
+        addition to simply cloning each pair of images, the interpolant value for each pixel is actually a weighted average of the previous interpolant values
+        for smoothing.
+        </p>
+         <hr noshade size=2>
+        <h2> Summary and Proposal Review </h2>
+        <p> I completed all items included in my proposal except for selective boundary suppresion and run-time assessment listed under Part III. However,
+        these were buffer points and the total raw points for the features I implemented is 89.
+        
+        </p>
+    </body>
+</html>
