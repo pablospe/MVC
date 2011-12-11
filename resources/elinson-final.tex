@@ -1,0 +1,354 @@
+\documentclass{beamer}
+\usepackage{multimedia}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage{verbatim}
+\usepackage{subfigure}
+\usepackage{hyperref}
+\newcommand{\lwidth}{.35}
+\newcommand{\lcwidth}{.8}
+\newcommand{\swidth}{.12}
+\newcommand{\mwidth}{.18}
+\newcommand{\half}{.5}
+\theoremstyle{remark}
+\newtheorem{rec}{Recall}
+\newtheorem{rem}{Remark}
+\renewcommand*{\thesubfigure}{}
+
+\newcommand{\I}{^{-1}}
+\newcommand{\set}[2]{\{#1|#2\}}
+\newcommand{\topic}[1]{\noindent{\textbf{#1}}}
+\newcommand{\bij}{\longleftrightarrow}
+\newcommand{\bslash}{\setminus}
+\newcommand{\cl}[1]{\overline{#1}}
+\newcommand{\seq}{\subseteq}
+\newcommand{\ds}{\displaystyle}
+\newcommand{\Wlog}{Without loss of generality }
+\newcommand{\rp}{$(\Rightarrow)$ }
+\newcommand{\lp}{$(\Leftarrow)$ }
+\renewcommand{\qedsymbol}{\tiny$\blacksquare$}
+
+\begin{document}
+\title{Coordinates for Instant\\Image Cloning}
+\author{Julius Elinson}
+\date{December 12$^{\text{th}}$, 2011}
+\beamertemplatenavigationsymbolsempty
+\institute{Harvey Mudd College}
+\begin{frame}
+\titlepage
+
+\end{frame}
+\begin{comment}
+\begin{frame}[t]
+ \frametitle{Image Composition}
+ \pause
+\begin{block}{Using a mask}
+\begin{itemize}
+ \item Cumbersome
+ \item Same size as image
+ \item Changes with each patch
+\end{itemize}
+ \pause
+\begin{block}{Poisson cloning}
+\begin{itemize}
+ \item Automates the masking process
+ \item Creates a membrane for patch area
+ \item \alert<4>{Difficult and expensive to solve}
+\end{itemize}
+\visible<4>{\centering\emph{Requires solving a system of partial differential equations}}
+\end{block}
+\end{block}
+\end{frame}
+
+\begin{frame}[t]
+ \frametitle{Image Composition}
+ \vspace{2mm}
+ \emph{Method proposed by Farbman et al. in paper from 2009:} 
+ \pause
+\begin{block}{Mean-value cloning}
+\begin{itemize}
+ \item Approximates poisson cloning
+ \item Nearly identical results
+ \item Applies simple ideas of interpolation and averaging
+\end{itemize}
+\end{block}
+\pause
+\begin{block}{Extensions}
+\begin{itemize}
+ \item Video cloning
+ \item Image stitching
+ \end{itemize}
+ \end{block}
+
+\end{frame}
+\end{comment}
+
+\begin{frame}[t]
+\frametitle{Published Results}
+
+\vfill
+\begin{center}
+\includegraphics[scale=.28]{polar}
+\end{center}
+\vspace{3mm}
+From Farbman et al. in ``Coordinates for Instant Image Cloning''
+\end{frame}
+
+\begin{comment}
+\begin{frame}[t]
+ \frametitle{Results | Mean-value}
+ \vfill
+\begin{center}
+\includegraphics[scale=.28]{bigpolar}
+\end{center}
+\end{frame}
+
+\begin{frame}[t]
+ \frametitle{Results | Mean-value}
+ \vfill
+\begin{center}
+\includegraphics[scale=.28]{huge}
+\end{center}
+\end{frame}
+
+\begin{frame}[t]
+ \frametitle{Results | Poisson}
+ \vfill
+\begin{center}
+\includegraphics[scale=.29]{poisson}
+\end{center}
+\end{frame}
+\end{comment}
+
+
+\begin{frame}[t]
+ \frametitle{Method}
+ 
+\begin{block}{Pseudocode}
+ \begin{center}
+\includegraphics[scale=.28]{alg}
+\end{center}
+\end{block}
+\end{frame}
+
+
+\begin{frame}[t]
+ \frametitle{Method}
+ 
+\begin{block}{Preliminary Steps}
+\begin{itemize}
+ \item Two-window user interface -- source and destination
+ \pause
+ \item Allow user to specify boundary \pause -- both with discrete points and by continuously tracing 
+ \pause
+ \item Create a complete boundary by linearly connecting points
+\end{itemize}
+\end{block}
+\pause
+\begin{block}{Bresenham's Line Algorithm}
+\begin{center}
+ \includegraphics[scale=.5]{bresenham.png}
+\end{center}
+\end{block}
+\end{frame}
+
+
+\begin{frame}[t]
+ \frametitle{Method}
+ 
+\begin{block}{Preliminary Steps}
+\begin{itemize}
+\pause 
+\item Compute boundary interior with bounding box
+\end{itemize}
+\pause
+\begin{center}
+ \includegraphics[scale=.5]{interior.png}
+\end{center}
+\pause
+\begin{itemize}
+ \item Allow user to specify location of cloned patch
+ \pause
+ \item Map source boundary to destination boundary
+ \pause
+ \item Perform main algorithm
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}[t]
+ \frametitle{Method}
+ 
+\begin{block}{Computing mean-value coordinates}
+  \begin{center}
+\includegraphics[scale=.28]{polygon}
+\end{center}
+\pause
+\vspace{2mm}
+\begin{columns}
+ \column{.5\textwidth}
+ \[
+ \lambda_i(x)=\frac{w_i}{\sum_{j=0}^{m-1}w_j}
+ \]
+ 
+  \column{.5\textwidth}
+  \vspace{-4mm}
+  \[
+  w_i=\frac{\tan(\alpha_{i-1}/2)+\tan(\alpha_i/2))}{\|p_i-x\|}
+  \]
+\end{columns}
+\end{block}
+\end{frame}
+
+
+
+
+
+
+\begin{frame}[t]
+ \frametitle{Method}
+ 
+\begin{block}{Pseudocode}
+\vspace{-2mm}
+ \begin{center}
+\includegraphics[scale=.24]{alg}
+\end{center}
+\end{block}
+\pause
+\vspace{-5mm}
+\emph{Essentially the resulting pixel is determined by a weighted average of the \alert{change in intensity of nearby boundary pixels}, where the weights are the mean-value coordinates.}
+\end{frame}
+
+\begin{frame}[t]
+\frametitle{Optimization} 
+\begin{block}{Hierarchical Boundary}
+\pause
+\begin{center}
+\includegraphics[scale=.18]{mesh}
+\end{center}
+\pause
+\begin{itemize}
+ \item \small{Granularity for each interior point is determined by proximity, gauged by both distance \& angle between adjacent boundary points.}
+ \pause 
+ \item \small{Implemented by recursively proceeding through levels of boundaries that get successively finer.}
+\end{itemize}
+
+\end{block}
+\end{frame}
+
+
+\begin{frame}[t]
+ \frametitle{Results}
+\begin{block}{Also using polar bears}
+\pause
+ \vspace{-2mm}
+\begin{figure} 
+\begin{center}
+ \subfigure{\includegraphics[scale=.4]{beach.jpg}}
+ \subfigure{\includegraphics[scale=.15]{mybear.jpg}}
+\end{center}
+\end{figure}
+\pause
+\vspace{-20mm}
+\begin{center}
+ \includegraphics[scale=.15]{results/naivebear.jpg}
+\end{center}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[t]
+ \frametitle{Results}
+\begin{block}{Also using polar bears}
+ \vspace{-2mm}
+\begin{figure} 
+\begin{center}
+ \subfigure{\includegraphics[scale=.4]{beach.jpg}}
+ \subfigure{\includegraphics[scale=.15]{mybear.jpg}}
+\end{center}
+\end{figure}
+
+\vspace{-20mm}
+\begin{center}
+ \includegraphics[scale=.15]{results/bingo.jpg}
+\end{center}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[t]
+ \frametitle{Results}
+\begin{block}{Close-up}
+ 
+\begin{center}
+ \includegraphics[scale=.3]{results/closeresult.png}
+\end{center}
+\end{block}
+\end{frame}
+
+\begin{frame}[t]
+\frametitle{Results}
+\begin{block}{Theirs close-up}
+\begin{center}
+\includegraphics[scale=.2]{huge.png} 
+\end{center}
+\end{block}
+\end{frame}
+
+\begin{frame}[t]
+ \frametitle{Results}
+ 
+\begin{block}{Too much background blending}
+ \begin{figure} 
+\begin{center}
+\includegraphics[scale=.14]{results/hmc.jpg}
+\end{center}
+\end{figure}
+\end{block}
+\end{frame}
+
+\begin{frame}[t]
+ \frametitle{Results}
+ 
+\begin{block}{Too much background blending}
+ \begin{figure} 
+\begin{center}
+\includegraphics[scale=.14]{results/polar.jpg}
+\end{center}
+\end{figure}
+\end{block}
+\end{frame}
+
+\begin{frame}[t]
+ \frametitle{Results}
+\begin{block}{Too much background blending}
+ \begin{figure} 
+\begin{center}
+\includegraphics[scale=.28]{results/badbear.png}
+\end{center}
+\end{figure}
+\end{block}
+\end{frame}
+
+\begin{frame}[t]
+\frametitle{Video Cloning}
+\begin{block}{Batch jobs}
+\begin{itemize}
+\pause
+\item User provides patch boundary using representative still image
+\pause
+ \item Clone over two sequences of images, while the patch location is invariant
+ \pause
+ \item Weighted average of time-decaying interpolant value for smoothing
+ \pause
+ \item Example
+\end{itemize}
+\end{block}
+\end{frame}
+
+\end{document}
