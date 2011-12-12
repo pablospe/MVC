@@ -9,11 +9,6 @@
 #include "membrane.h"
 #include "batch.h"
 
-/***
- To DO
- - wiki log
-***/
-
 extern Window source;
 extern Window destination;
 
@@ -22,6 +17,5 @@ void display();
 void unreshapeSrc (int width, int height);
 void unreshapeDst (int width, int height);
 void reshape (Window& w);
-
 
 #endif // MAIN_H

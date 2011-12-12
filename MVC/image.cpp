@@ -1,3 +1,5 @@
+// From image processor assignment
+
 #include "image.h"
 #include <GL/glut.h>
 #include <math.h>

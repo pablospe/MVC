@@ -43,12 +43,20 @@ void Batch::prepareFiles(string& srcLoad, string& dstLoad, string& resultSave)
 	stringstream index;
 	index << srcCounter + saveCounter;
 	srcLoad = srcFileBase;
+	if (srcCounter + saveCounter < 10) 
+		srcFileBase.append("00");
+	else if (srcCounter + saveCounter < 100)
+		srcFileBase.append("0");
 	srcFileBase.append(index.str()).append(".bmp");
 	swap(srcLoad, srcFileBase);
 	index.str("");
 
 	index << dstCounter + saveCounter;
 	dstLoad = dstFileBase;
+	if (dstCounter + saveCounter < 10) 
+		dstFileBase.append("00");
+	else if (dstCounter + saveCounter < 100)
+		dstFileBase.append("0");
 	dstFileBase.append(index.str()).append(".bmp");
 	swap(dstLoad, dstFileBase);
 	index.str("");

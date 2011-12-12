@@ -42,9 +42,6 @@ int main(int argc, char** argv)
 	glutKeyboardFunc(keyboardFunc);
 	glutMouseFunc(mouseClickDst);
 
-	imageLoad("../cat.bmp", source);
-	imageLoad("../test.bmp", destination);
-
 	glutMainLoop();
 }
 

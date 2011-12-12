@@ -1,3 +1,5 @@
+// From image processor assignment
+
 class Image;
 
 #ifndef IMAGE_H
