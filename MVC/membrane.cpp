@@ -61,7 +61,7 @@ void Membrane::composite()
 			timeWeight += weight;
 			interpolant = interpolant + scale(history[j][i], weight);
 		}
-		interpolant = scale(interpolant, (.9 * 1/timeWeight));
+		interpolant = scale(interpolant, (1/timeWeight));
 
 		Pixel result = interpolant + source.originalImg->getPixel_(sourcePoint);
 		destination.currentImg->setPixel_(targetPoint, result);

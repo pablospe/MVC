@@ -13,8 +13,8 @@
         <h2> User Interface </h2>
         <h3> I/O </h3>
         <p> Upon launching the program, two windows appear, one labeled "Source" and one labeled "Target." Using the right-click, each window
-        can be loaded with a .bmp image. Each window saves, reverts and prints file info independently. A help menu is accesible by both
-        the right-click menu and by pressing 'h' on either window.
+        can be loaded with a .bmp image. Each window saves, reverts and prints file info independently. Each window thus has its own
+		right-click menu. A help menu is accesible by both the right-click menu and by pressing 'h' on either window.
         </p>
         <h3> Selecting A Source Patch</h3>
         <p> One a source image has been loaded, using the right-click menu on the source window, under "Clone" a user can select either "Outline Patch" or 
@@ -23,18 +23,23 @@
         patch they wish to clone.
         </p>
         <p> In either cloning technique, once a boundary vertex has been added that is sufficiently close to the original vertex, the patch will
-        close and the interior of the image will automatically be computed, blacking out the rest of the image. While selecting the boundary,
+        close and the interior of the image will automatically be computed, blacking out the rest of the image. This may take
+		a few moments. While selecting the boundary,
         if the user wants to automatically close the patch, they can press 'c' and the first vertex will be connected to the last vertex to be
-        addded. Note that patchs must be simple (non-intersecting) and convex for correct calculation of interior points.
+        addded. Note that patchs must be simple (non-intersecting) and convex for correct calculation of interior points. If the patch is not convex, then there may be error in calculating the interior, resulting in strips of falsely computed
+		interiors points. Thus for best
+		performance, create a convex patch, even if it means thicker borders around the desired image.
         </p>
-        <p> If the user is unsatisfied with the patch area, using the menu, under "Clone" they can select to clear the patch and the image will
+        <p> If the user is unsatisfied with the patch area, using the menu, under "Clone" they can select "Clear Patch" and the image will
         be reverted.
         </p> 
         
         <h3> Cloning Source Patch </h3>
         <p> Once a source patch has been selected and a target image has been loaded, the user can paste the patch and perform the cloning. To do so,
         using the right-click menu on the target window, under "Clone" select "Paste Patch." Then using the mouse, left-click the point on the target
-        image which will correspond to the first point in the source patch (highlighted by a yellow square). A user can do this on a target image as many times
+        image which will correspond to the first point in the source patch (highlighted by a yellow square). Upon clicking,
+		the membrane for the patch will be generated and then pasted onto the target. This may take up to a minute. 
+		A user can do this on a target image as many times
         as they want or they can remove the pasted images by clicking on "Clear Pasted Patch" under "Clone" in the menu. Additionally, for comparison,
         the user can directly paste the original source image by choosing "Naive Paste Patch" in the menu. This will simply copy the pixel images
         from the source and directly replace the correspond pixels in the target image. This feature was implemented to allow a user
@@ -61,7 +66,20 @@
         addition to simply cloning each pair of images, the interpolant value for each pixel is actually a weighted average of the previous interpolant values
         for smoothing.
         </p>
-         <hr noshade size=2>
+        <hr noshade size=2>
+		<h2> Results </h2>
+		<p> I was able to generate results on three sets of images using both my implementation and the implementation offered
+		on the paper's website, available <a href="http://www.cs.huji.ac.il/~danix/mvclone/"> here</a> under "Demos." The zipped
+		file "Images.zip" on the Wiki contains two directories - one for the results from each implementation. I ran my program on 
+		their sample images (polar bear and beach) and my own (another polar bear and beach and Harvey Mudd's campus). 
+		I also ran their program on the additonal image sets I used. For side-by-side comparisons of the two programs
+		on the same input, see the presentation uploaded to the Wiki.
+		</p>
+		<p> Additionally, I created a movie by batch cloning over a sequence of still images. In the movie, I use the same
+		set of images for both the source and target and simply clone myself so the resulting movie features two copies of myself moving.
+		The movie is named "sync.mp4" and can be played on the Wiki.
+		<hr noshade size=2>
+		</p>
         <h2> Summary and Proposal Review </h2>
         <p> I completed all items included in my proposal except for selective boundary suppresion and run-time assessment listed under Part III. However,
         these were buffer points and the total raw points for the features I implemented is 89.
