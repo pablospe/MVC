@@ -131,6 +131,7 @@ public:
 	void		setPixel  (int x, int y, Pixel& pixel);
 	void		setPixel_ (int x, int y, Pixel& pixel);
 	void		setPixel_ (Point pt, Pixel& pixel);
+	void		setArea_  (Point pt, Pixel& pixel);
 
 	// OpenGL call wrappers
 	void		glDrawPixelsWrapper ();

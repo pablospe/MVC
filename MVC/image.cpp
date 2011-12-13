@@ -448,13 +448,18 @@ void Image::setPixel_(Point pt, Pixel &pixel)
 	setPixel_(pt.x, pt.y, pixel);
 }
 
+void Image::setArea_(Point pt, Pixel& pixel)
+{
+	for (int x = pt.x - 1; x <= pt.x + 1; ++x)
+		for (int y = pt.y - 1; y <= pt.y + 1; ++y)
+			setPixel_(x,y,pixel);
+}
 
 void Image::glReadPixelsWrapper ()
 {
 	assert(good());
 	glPixelStorei(GL_PACK_ALIGNMENT, 1);
 	glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixels);
-
 }
 
 

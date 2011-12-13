@@ -232,7 +232,7 @@ void mouseClickSrc (int button, int state, int x, int y)
 
 			else
 				for (int chn = RED; chn <= BLUE; ++chn)
-					source.currentImg->setPixel_(vertex,chn, 1);
+					source.currentImg->setArea_(vertex,Pixel(1,1,1));
 		}
 
 		glutPostRedisplay();

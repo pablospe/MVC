@@ -178,15 +178,7 @@ void Patch::fillLine(Point pt1, Point pt2, vector<Point>& border)
 void Patch::colorFirstPoint()
 {
 	Point first = boundary.front();
-	source.currentImg->setPixel_(first,Pixel(1,1,0));
-	source.currentImg->setPixel_(first.x,first.y + 1,Pixel(1,1,0));
-	source.currentImg->setPixel_(first.x + 1,first.y,Pixel(1,1,0));
-	source.currentImg->setPixel_(first.x - 1,first.y,Pixel(1,1,0));
-	source.currentImg->setPixel_(first.x,first.y - 1,Pixel(1,1,0));
-	source.currentImg->setPixel_(first.x - 1,first.y - 1,Pixel(1,1,0));
-	source.currentImg->setPixel_(first.x + 1,first.y + 1,Pixel(1,1,0));
-	source.currentImg->setPixel_(first.x + 1,first.y - 1,Pixel(1,1,0));
-	source.currentImg->setPixel_(first.x - 1,first.y + 1,Pixel(1,1,0));
+	source.currentImg->setArea_(first,Pixel(1,1,0));
 	glutPostRedisplay();
 }
 
