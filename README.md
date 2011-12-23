@@ -1,4 +1,8 @@
+MVC
+===
+
 Created by Julius Elinson
+-------------------------
 
 Implementation of ''Coordinates for Mean-Value Cloning'' by Farbman et al. 
 (2009) for Computer Graphics (CS 155) at Harvey Mudd College.
