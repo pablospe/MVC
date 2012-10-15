@@ -14,7 +14,7 @@ class Image;
 #define EPSILON         1e-5
 #define MAX_LINE        1024
 #define MAX_PATH        1024
-#define MAX_NAME		128
+#define MAX_NAME	128
 
 #ifndef M_PI            // from math.h
   #define M_PI          3.14159265358979323846
