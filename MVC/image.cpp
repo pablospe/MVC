@@ -94,8 +94,8 @@ double Pixel::getColor(int chan)
 void Pixel::setColor(int chan, double val)
 {
 	assert (chan>=0 && chan <=2);
-	val=max(val,0);
-	val=min(val,1);
+	val=max(val,0.0);
+	val=min(val,1.0);
 	col[chan]=val;
 }
 
@@ -561,7 +561,7 @@ int Image::writeBMP (const char* filename)
 		if (writeBMP(file) == -1)
 		{
 			file.close();
-			unlink(filename);
+// 			unlink(filename);
 			return -1;
 		}
 		else

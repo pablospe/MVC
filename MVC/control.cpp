@@ -230,9 +230,11 @@ void mouseClickSrc (int button, int state, int x, int y)
 			if (source.patch.addPoint(vertex))
 				source.patch.closed();
 
-			else
+			else {
+				Pixel p(1,1,1);
 				for (int chn = RED; chn <= BLUE; ++chn)
-					source.currentImg->setArea_(vertex,Pixel(1,1,1));
+					source.currentImg->setArea_(vertex,p);
+			}
 		}
 
 		glutPostRedisplay();
@@ -469,7 +471,8 @@ void undoPoint()
 {
 	if (source.dClone) {
 		Point last = source.patch.lastBoundary();
-		source.currentImg->setPixel_(last,source.originalImg->getPixel_(last));
+		Pixel p = source.originalImg->getPixel_(last);
+		source.currentImg->setPixel_(last,p);
 		source.patch.removeLastBoundary();
 		cout << "Removing point at: " << last << endl;
 		glutPostRedisplay();

@@ -1,6 +1,8 @@
 #include "patch.h"
 #include "main.h"
 #include "control.h"
+#include <algorithm>
+
 
 using namespace std;
 
@@ -178,7 +180,8 @@ void Patch::fillLine(Point pt1, Point pt2, vector<Point>& border)
 void Patch::colorFirstPoint()
 {
 	Point first = boundary.front();
-	source.currentImg->setArea_(first,Pixel(1,1,0));
+    Pixel p(1,1,0);
+	source.currentImg->setArea_(first,p);
 	glutPostRedisplay();
 }
 
@@ -233,13 +236,19 @@ void Patch::computeInterior()
 			if (interiorPoint(x,y))
 				interior.push_back(Point(x,y));
 			else
-				currImg->setPixel_(x,y,Pixel());
+      {
+        Pixel p;
+				currImg->setPixel_(x,y,p);
+      }
 		}
 	}
 	for (int x = 0; x < imgWidth; ++x)
 		for (int y = 0; y < imgHeight; ++y)
 			if (x < lowX || x > highX || y < lowY || y > highY)
-				currImg->setPixel_(x,y,Pixel());
+      {
+        Pixel p;
+				currImg->setPixel_(x,y,p);
+      }
 }
 
 bool Patch::interiorPoint(int x, int y)

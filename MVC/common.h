@@ -28,8 +28,8 @@ class Image;
 // macros
 #define sqr(x)          ((x)*(x))
 #define cube(x)		((x) * (x) * (x))
-#define max(a,b)        ((a)>(b)?(a):(b))
-#define min(a,b)        ((a)<(b)?(a):(b))
+//#define max(a,b)        ((a)>(b)?(a):(b))
+//#define min(a,b)        ((a)<(b)?(a):(b))
 
 #define deg2rad(x)      ((x)*M_PI/180.0)
 #define rad2deg(x)      ((x)*180.0/M_PI)

@@ -50,8 +50,10 @@ void Membrane::composite()
 
 		Pixel interpolant;
 		// Loop over boundary
-		for (size_t j = 0; j < meanValues[i].second.size(); ++j)
-			interpolant = interpolant + scale(diff[(meanValues[i].second[j])], meanValues[i].first[j]);
+		for (size_t j = 0; j < meanValues[i].second.size(); ++j) {
+			Pixel p = scale(diff[(meanValues[i].second[j])], meanValues[i].first[j]);
+			interpolant = interpolant + p;
+    }
 	
 		double timeWeight = 1;
 		// Loop over history (for batch)
@@ -59,11 +61,13 @@ void Membrane::composite()
 			int dT =  history.size() - j + 1;
 			double weight = pow(double(dT), -0.75);
 			timeWeight += weight;
-			interpolant = interpolant + scale(history[j][i], weight);
+			Pixel p = scale(history[j][i], weight);
+			interpolant = interpolant + p;
 		}
 		interpolant = scale(interpolant, (1/timeWeight));
 
-		Pixel result = interpolant + source.originalImg->getPixel_(sourcePoint);
+		Pixel p = source.originalImg->getPixel_(sourcePoint);
+		Pixel result = interpolant + p;
 		destination.currentImg->setPixel_(targetPoint, result);
 		membraneValues.push_back(interpolant);
 	}
@@ -77,7 +81,8 @@ void Membrane::naiveComposite()
 		Point sourcePoint = (*interior)[i];
 		Point targetPoint = translate((*boundary)[0],start,sourcePoint);
 
-		destination.currentImg->setPixel_(targetPoint, source.originalImg->getPixel_(sourcePoint));
+		Pixel p = source.originalImg->getPixel_(sourcePoint);
+		destination.currentImg->setPixel_(targetPoint, p);
 	}
 	glutPostRedisplay();
 }
@@ -136,7 +141,11 @@ vector<Pixel> Membrane::differenceBoundary()
 		if (dst.x >= destination.width || dst.y >= destination.height)
 			differences.push_back(Pixel());
 		else
-			differences.push_back(destination.originalImg->getPixel_(dst) - source.originalImg->getPixel_(src));
+    {
+		Pixel r = destination.originalImg->getPixel_(dst);
+		Pixel s = source.originalImg->getPixel_(src);
+		differences.push_back(r - s);
+    }
 	}
 
 	return differences;

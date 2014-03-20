@@ -4,8 +4,6 @@
 #include "image.h"
 #include "common.h"
 #include "membrane.h"
-#include <algorithm>
-
 
 class Patch
 {
